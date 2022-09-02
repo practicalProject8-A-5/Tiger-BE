@@ -37,13 +37,16 @@ public class Vehicle extends Timestamped {
 
     // 상품 주소
     @Column(nullable = false)
-    private String address;
+    private String location;
 
     // 상품 활성/비활성
     @Column(nullable = false)
     private Boolean isValid;
 
-    // 상품 대표 이미지
+    // 상품 이미지
+    @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VehicleImage> images;
+
 
     /*
     ==============================================
@@ -65,9 +68,13 @@ public class Vehicle extends Timestamped {
     @Column(nullable = false)
     private String fuelType;
 
+    // 차 탑승객 수
+    @Column(nullable = false)
+    private String passengers;
+
     // 차 변속기 타입(자동, 수동)
     @Column(nullable = false)
-    private String transType;
+    private String transmission;
 
     // 차 연비
     @Column(nullable = false)
@@ -77,12 +84,13 @@ public class Vehicle extends Timestamped {
         this.ownerId = requestDto.getOwnerId();
         this.price = requestDto.getPrice();
         this.description = requestDto.getDescription();
-        this.address = requestDto.getAddress();
+        this.location = requestDto.getLocation();
         this.name = requestDto.getName();
         this.type = requestDto.getType();
         this.years = requestDto.getYears();
         this.fuelType = requestDto.getFuelType();
-        this.transType = requestDto.getTransType();
+        this.passengers = requestDto.getPassengers();
+        this.transmission = requestDto.getTransmission();
         this.fuelEfficiency = requestDto.getFuelEfficiency();
 
         return this;

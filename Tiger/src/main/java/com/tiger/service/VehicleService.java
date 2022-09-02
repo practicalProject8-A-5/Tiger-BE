@@ -1,13 +1,17 @@
 package com.tiger.service;
 
 import com.tiger.domain.vehicle.Vehicle;
+import com.tiger.domain.vehicle.VehicleImage;
 import com.tiger.domain.vehicle.dto.VehicleRequestDto;
-import com.tiger.domain.vehicle.dto.VehicleSearch;
+import com.tiger.domain.vehicle.dto.VehicleResponseDto;
+import com.tiger.repository.VehicleImageRepository;
 import com.tiger.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -15,6 +19,8 @@ import java.util.List;
 public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
+    private final AwsS3Service awsS3Service;
+    private final VehicleImageRepository vehicleImageRepository;
 
     // 상품 등록
     @Transactional
@@ -24,25 +30,70 @@ public class VehicleService {
                 .ownerId(requestDto.getOwnerId())
                 .price(requestDto.getPrice())
                 .description(requestDto.getDescription())
-                .address(requestDto.getAddress())
+                .location(requestDto.getLocation())
                 .isValid(true)
                 //
                 .name(requestDto.getName())
                 .type(requestDto.getType())
                 .years(requestDto.getYears())
                 .fuelType(requestDto.getFuelType())
-                .transType(requestDto.getTransType())
+                .passengers(requestDto.getPassengers())
+                .transmission(requestDto.getTransmission())
                 .fuelEfficiency(requestDto.getFuelEfficiency())
                 .build();
+
+        // 사진 업로드
+        List<MultipartFile> multipartFiles = requestDto.getMultipartFiles();
+
+        List<String> ImageUrlList = awsS3Service.uploadFile(multipartFiles);
+
+        for (String imageUrl : ImageUrlList) {
+            vehicleImageRepository.save(
+                VehicleImage.builder()
+                        .imageUrl(imageUrl)
+                        .vehicle(vehicle)
+                        .build()
+            );
+        }
 
         return vehicleRepository.save(vehicle);
     }
 
     // 종류별 상품 조회
-    public List<Vehicle> readAllByType(String type) {
+    public List<VehicleResponseDto> readAllByType(String type) {
 
-        return vehicleRepository.findAllByTypeAndIsValidOrderByModifiedAtDesc(type, true).orElseThrow(()-> new IllegalArgumentException("유효하지 않은 차종입니다."));
+        List<Vehicle> vehicleList = vehicleRepository.findAllByTypeAndIsValidOrderByModifiedAtDesc(type, true).orElseThrow(()-> new IllegalArgumentException("유효하지 않은 차종입니다."));
 
+        List<VehicleResponseDto> vehicleResponseDtos = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicleList) {
+            List<VehicleImage> vehicleImages = vehicleImageRepository.findAllByVehicle_Id(vehicle.getId());
+
+            List<String> urls = new ArrayList<>();
+
+            for (VehicleImage vehicleImage : vehicleImages) {
+                urls.add(vehicleImage.toString());
+            }
+
+            vehicleResponseDtos.add(
+                VehicleResponseDto.builder()
+                    .ownerId(vehicle.getOwnerId())
+                    .price(vehicle.getPrice())
+                    .description(vehicle.getDescription())
+                    .location(vehicle.getLocation())
+                    .vehicleImages(urls)
+                    .name(vehicle.getName())
+                    .type(vehicle.getType())
+                    .years(vehicle.getYears())
+                    .fuelType(vehicle.getFuelType())
+                    .passengers(vehicle.getPassengers())
+                    .transmission(vehicle.getTransmission())
+                    .fuelEfficiency(vehicle.getFuelEfficiency())
+                    .build());
+
+        }
+
+        return vehicleResponseDtos;
     }
 
     // 상세 상세 조회
@@ -76,6 +127,8 @@ public class VehicleService {
         return vehicle.delete();
     }
 
+    // 상품 수정 페이지 (오너 마이페이지)
+
     /* 상품 검색
     public List<Vehicle> search(VehicleSearch vehicleSearch) {
         String location = vehicleSearch.getLocation();
@@ -87,7 +140,5 @@ public class VehicleService {
 
     }
     */
-
-
 
 }

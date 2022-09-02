@@ -1,14 +1,17 @@
 package com.tiger.domain.vehicle.dto;
 
+import com.tiger.domain.vehicle.VehicleImage;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Builder
 @Getter
 @Setter
-public class VehicleRequestDto {
+public class VehicleResponseDto {
 
     // 상품 주인
     private Long ownerId;
@@ -23,7 +26,7 @@ public class VehicleRequestDto {
     private String location;
 
     // 상품 이미지
-    private List<MultipartFile> multipartFiles;
+    private List<String> vehicleImages;
 
     // 차 이름(브랜드 + 모델명)
     private String name;

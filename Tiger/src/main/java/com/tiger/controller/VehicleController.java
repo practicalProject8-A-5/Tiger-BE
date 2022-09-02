@@ -2,12 +2,11 @@ package com.tiger.controller;
 
 import com.tiger.domain.vehicle.Vehicle;
 import com.tiger.domain.vehicle.dto.VehicleRequestDto;
-import com.tiger.domain.vehicle.dto.VehicleSearch;
+import com.tiger.domain.vehicle.dto.VehicleResponseDto;
 import com.tiger.service.VehicleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +22,7 @@ public class VehicleController {
     // 상품 등록
     @PostMapping("/management")
     @ApiOperation(value = "상품 등록")
-    public ResponseEntity<?> create(@RequestBody VehicleRequestDto requestDto) {
+    public ResponseEntity<?> create(@ModelAttribute VehicleRequestDto requestDto) {
 
         Vehicle vehicle = vehicleService.create(requestDto);
 
@@ -36,9 +35,9 @@ public class VehicleController {
     public ResponseEntity<?> readAllByTypeImported() {
         String type = "수입";
 
-        List<Vehicle> vehicleList = vehicleService.readAllByType(type);
+        List<VehicleResponseDto> vehicleResponseDtos = vehicleService.readAllByType(type);
 
-        return ResponseEntity.ok(vehicleList);
+        return ResponseEntity.ok(vehicleResponseDtos);
     }
 
     // 상품 상세 조회
@@ -62,9 +61,6 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleList);
     }
 
-    // 상품 수정 페이지 (오너 마이페이지)
-
-
     // 상품 수정
     @PutMapping("/management/{vId}")
     @ApiOperation(value = "상품 수정", notes = "오너 모드 마이페이지에서 사용")
@@ -85,6 +81,7 @@ public class VehicleController {
         return ResponseEntity.ok(vehicle);
     }
 
+    // 상품 수정 페이지 (오너 마이페이지)
 
     /* 상품 검색
     @GetMapping
