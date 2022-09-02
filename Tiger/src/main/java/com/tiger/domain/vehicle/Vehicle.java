@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -48,6 +49,9 @@ public class Vehicle extends Timestamped {
     @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VehicleImage> images;
 
+    // 상품 썸네일
+    @Column(nullable = false)
+    private String thumbnail;
 
     /*
     ==============================================

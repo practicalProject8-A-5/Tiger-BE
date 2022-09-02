@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -26,13 +27,17 @@ public class VehicleService {
     @Transactional
     public Vehicle create(VehicleRequestDto requestDto) {
 
+        List<MultipartFile> multipartFiles = requestDto.getMultipartFiles();
+
+        List<String> imageUrlList = awsS3Service.uploadFile(multipartFiles);
+
         Vehicle vehicle = Vehicle.builder()
                 .ownerId(requestDto.getOwnerId())
                 .price(requestDto.getPrice())
                 .description(requestDto.getDescription())
                 .location(requestDto.getLocation())
                 .isValid(true)
-                //
+                .thumbnail(imageUrlList.get(0))
                 .name(requestDto.getName())
                 .type(requestDto.getType())
                 .years(requestDto.getYears())
@@ -43,11 +48,9 @@ public class VehicleService {
                 .build();
 
         // 사진 업로드
-        List<MultipartFile> multipartFiles = requestDto.getMultipartFiles();
 
-        List<String> ImageUrlList = awsS3Service.uploadFile(multipartFiles);
 
-        for (String imageUrl : ImageUrlList) {
+        for (String imageUrl : imageUrlList) {
             vehicleImageRepository.save(
                 VehicleImage.builder()
                         .imageUrl(imageUrl)
@@ -67,13 +70,6 @@ public class VehicleService {
         List<VehicleResponseDto> vehicleResponseDtos = new ArrayList<>();
 
         for (Vehicle vehicle : vehicleList) {
-            List<VehicleImage> vehicleImages = vehicleImageRepository.findAllByVehicle_Id(vehicle.getId());
-
-            List<String> urls = new ArrayList<>();
-
-            for (VehicleImage vehicleImage : vehicleImages) {
-                urls.add(vehicleImage.getImageUrl());
-            }
 
             vehicleResponseDtos.add(
                 VehicleResponseDto.builder()
@@ -81,7 +77,7 @@ public class VehicleService {
                     .price(vehicle.getPrice())
                     .description(vehicle.getDescription())
                     .location(vehicle.getLocation())
-                    .vehicleImages(urls)
+                    .vehicleImages(vehicle.getImages().stream().map(VehicleImage::getImageUrl).collect(Collectors.toList()))
                     .name(vehicle.getName())
                     .type(vehicle.getType())
                     .years(vehicle.getYears())
@@ -92,7 +88,6 @@ public class VehicleService {
                     .build());
 
         }
-
         return vehicleResponseDtos;
     }
 
