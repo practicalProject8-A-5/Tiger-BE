@@ -72,7 +72,7 @@ public class VehicleService {
             List<String> urls = new ArrayList<>();
 
             for (VehicleImage vehicleImage : vehicleImages) {
-                urls.add(vehicleImage.toString());
+                urls.add(vehicleImage.getImageUrl());
             }
 
             vehicleResponseDtos.add(
