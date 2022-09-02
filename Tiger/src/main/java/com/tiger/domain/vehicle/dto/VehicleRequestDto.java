@@ -28,7 +28,7 @@ public class VehicleRequestDto {
     // 차 이름(브랜드 + 모델명)
     private String name;
 
-    // 차 타입(세단, 쿠페, 왜건, SUV, 해치백, 리무진, 밴, 픽업트럭)
+    // 차 타입(경형, 중형, 대형, 승합RV, 수입)
     private String type;
 
     // 차 연식
