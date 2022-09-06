@@ -2,6 +2,8 @@ package com.tiger.service;
 
 import com.tiger.domain.UserDetailsImpl;
 import com.tiger.domain.member.Member;
+import com.tiger.exception.CustomException;
+import com.tiger.exception.StatusCode;
 import com.tiger.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +21,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Member> member = memberRepository.findByEmail(email);
+        Optional<Member> member = memberRepository.findByEmailAndIsValid(email, true);
         return member
                 .map(UserDetailsImpl::new)
-                .orElseThrow(()-> new UsernameNotFoundException("아이디를 찾을 수 없습니다."));
+                .orElseThrow(()-> {
+                    throw new CustomException(StatusCode.USERNAME_NOT_FOUND);
+                });
     }
 }

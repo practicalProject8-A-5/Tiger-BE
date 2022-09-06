@@ -10,9 +10,6 @@ import java.util.List;
 @Setter
 public class VehicleRequestDto {
 
-    // 상품 주인
-    private Long ownerId;
-
     // 상품 가격
     private Integer price;
 
@@ -23,7 +20,7 @@ public class VehicleRequestDto {
     private String location;
 
     // 상품 이미지
-    private List<MultipartFile> multipartFiles;
+    private List<MultipartFile> imageList;
 
     // 차 브랜드
     private String vbrand;

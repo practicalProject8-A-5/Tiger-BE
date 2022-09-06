@@ -89,8 +89,8 @@ public class Vehicle extends Timestamped {
     @Column(nullable = false)
     private String fuelEfficiency;
 
-    public void update(VehicleRequestDto requestDto) {
-        this.ownerId = requestDto.getOwnerId();
+    public void update(VehicleRequestDto requestDto, Long ownerId, String thumbnail) {
+        this.ownerId = ownerId;
         this.price = requestDto.getPrice();
         this.description = requestDto.getDescription();
         this.location = requestDto.getLocation();
@@ -102,9 +102,11 @@ public class Vehicle extends Timestamped {
         this.passengers = requestDto.getPassengers();
         this.transmission = requestDto.getTransmission();
         this.fuelEfficiency = requestDto.getFuelEfficiency();
+        this.thumbnail = thumbnail;
     }
 
     public void delete() {
+        this.thumbnail = "null"; // 나중에 default 이미지를 삽입하기
         this.isValid = false;
     }
 

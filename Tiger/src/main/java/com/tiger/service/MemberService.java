@@ -57,11 +57,8 @@ public class MemberService {
 
         String email = loginRequestDto.getEmail();
 
-        // 아이디와 비밀번호 검증
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> {
-                    throw new CustomException(StatusCode.INVALID_EMAIL);
-                });
+        Member member = findMemberByEmail(email);
+
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword())) {
             throw new CustomException(StatusCode.INVALID_PASSWORD);
         }
@@ -88,8 +85,8 @@ public class MemberService {
 
     public Member findMemberByEmail(String email) {
 
-        return memberRepository.findByEmail(email).orElseThrow(()-> {
-            throw new CustomException(StatusCode.USER_NOT_FOUND);
+        return memberRepository.findByEmailAndIsValid(email, true).orElseThrow(()-> {
+            throw new CustomException(StatusCode.INVALID_EMAIL);
         });
     }
 }

@@ -18,7 +18,4 @@ public class VehicleOwnerResponseDto {
     private Integer price;
     private String location;
     private String createdAt;
-    // 나중에 제거
-    private String startDate;
-    private String endDate;
 }

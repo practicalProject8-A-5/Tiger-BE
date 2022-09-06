@@ -1,12 +1,17 @@
 package com.tiger.controller;
 
 import com.tiger.domain.CommonResponseDto;
+import com.tiger.domain.UserDetailsImpl;
+import com.tiger.domain.member.Member;
 import com.tiger.domain.vehicle.dto.VehicleCommonResponseDto;
+import com.tiger.domain.vehicle.dto.VehicleDetailResponseDto;
 import com.tiger.domain.vehicle.dto.VehicleOwnerResponseDto;
 import com.tiger.domain.vehicle.dto.VehicleRequestDto;
 import com.tiger.exception.StatusCode;
 import com.tiger.service.VehicleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,9 +24,12 @@ public class VehicleController {
 
     // 상품 등록
     @PostMapping("/management")
-    public CommonResponseDto<?> create(@ModelAttribute VehicleRequestDto requestDto) {
+    public CommonResponseDto<?> create(@ModelAttribute VehicleRequestDto requestDto,
+                                       @AuthenticationPrincipal UserDetails userDetails) {
 
-        String name = vehicleService.create(requestDto);
+        Member member = ((UserDetailsImpl) userDetails).getMember();
+
+        String name = vehicleService.create(requestDto, member.getId());
 
         return CommonResponseDto.success(StatusCode.VEHICLE_CREATED, name);
     }
@@ -40,44 +48,56 @@ public class VehicleController {
     @GetMapping("/{vId}")
     public CommonResponseDto<?> readOne(@PathVariable Long vId) {
 
-        VehicleCommonResponseDto vehicleCommonResponseDto = vehicleService.readOne(vId);
+        VehicleDetailResponseDto vehicleDetailResponseDto = vehicleService.readOne(vId);
 
-        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleCommonResponseDto);
+        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleDetailResponseDto);
     }
 
 
     //등록한 상품 조회 (오너 마이페이지)
-    @GetMapping("/management/{ownerId}")
-    public CommonResponseDto<?> readAllByOwnerId(@PathVariable Long ownerId) {
+    @GetMapping("/management")
+    public CommonResponseDto<?> readAllByOwnerId(@AuthenticationPrincipal UserDetails userDetails) {
 
-        List<VehicleOwnerResponseDto> vehicleOwnerResponseDtos = vehicleService.readAllByOwnerId(ownerId);
+        Member member = ((UserDetailsImpl) userDetails).getMember();
+
+        List<VehicleOwnerResponseDto> vehicleOwnerResponseDtos = vehicleService.readAllByOwnerId(member.getId());
 
         return CommonResponseDto.success(StatusCode.SUCCESS, vehicleOwnerResponseDtos);
     }
 
     // 상품 수정페이지 요청
     @GetMapping("/management/{vId}")
-    public CommonResponseDto<?> updatePage(@PathVariable Long vId) {
+    public CommonResponseDto<?> updatePage(@PathVariable Long vId,
+                                           @AuthenticationPrincipal UserDetails userDetails) {
 
-        VehicleCommonResponseDto vehicleCommonResponseDto = vehicleService.readOne(vId);
+        Member member = ((UserDetailsImpl) userDetails).getMember();
 
-        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleCommonResponseDto);
+        VehicleDetailResponseDto vehicleDetailResponseDto = vehicleService.updatePage(vId, member.getId());
+
+        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleDetailResponseDto);
     }
 
     // 상품 수정
     @PutMapping("/management/{vId}")
-    public CommonResponseDto<?> update(@PathVariable Long vId, @RequestBody VehicleRequestDto requestDto) {
+    public CommonResponseDto<?> update(@PathVariable Long vId,
+                                       @ModelAttribute VehicleRequestDto requestDto,
+                                       @AuthenticationPrincipal UserDetails userDetails) {
 
-        String name = vehicleService.update(vId, requestDto);
+        Member member = ((UserDetailsImpl) userDetails).getMember();
+
+        String name = vehicleService.update(vId, requestDto, member.getId());
 
         return CommonResponseDto.success(StatusCode.VEHICLE_UPDATED, name);
     }
 
     // 상품 삭제
     @DeleteMapping("/management/{vId}")
-    public CommonResponseDto<?> delete(@PathVariable Long vId) {
+    public CommonResponseDto<?> delete(@PathVariable Long vId,
+                                       @AuthenticationPrincipal UserDetails userDetails) {
 
-        String name = vehicleService.delete(vId);
+        Member member = ((UserDetailsImpl) userDetails).getMember();
+
+        String name = vehicleService.delete(vId, member.getId());
 
         return CommonResponseDto.success(StatusCode.VEHICLE_DELETED, name);
     }

@@ -1,12 +1,15 @@
 package com.tiger.service;
 
+import com.tiger.domain.member.Member;
 import com.tiger.domain.vehicle.Vehicle;
 import com.tiger.domain.vehicle.VehicleImage;
+import com.tiger.domain.vehicle.dto.VehicleDetailResponseDto;
 import com.tiger.domain.vehicle.dto.VehicleOwnerResponseDto;
 import com.tiger.domain.vehicle.dto.VehicleRequestDto;
 import com.tiger.domain.vehicle.dto.VehicleCommonResponseDto;
 import com.tiger.exception.CustomException;
 import com.tiger.exception.StatusCode;
+import com.tiger.repository.MemberRepository;
 import com.tiger.repository.VehicleImageRepository;
 import com.tiger.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,16 +30,18 @@ public class VehicleService {
     private final AwsS3Service awsS3Service;
     private final VehicleImageRepository vehicleImageRepository;
 
+    private final MemberRepository memberRepository;
+
     // 상품 등록
     @Transactional
-    public String create(VehicleRequestDto requestDto) {
+    public String create(VehicleRequestDto requestDto, Long ownerId) {
 
-        List<MultipartFile> multipartFiles = requestDto.getMultipartFiles();
+        List<MultipartFile> multipartFiles = requestDto.getImageList();
 
         List<String> imageUrlList = awsS3Service.uploadFile(multipartFiles);
 
         Vehicle vehicle = Vehicle.builder()
-                .ownerId(requestDto.getOwnerId())
+                .ownerId(ownerId)
                 .price(requestDto.getPrice())
                 .description(requestDto.getDescription())
                 .location(requestDto.getLocation())
@@ -98,11 +103,35 @@ public class VehicleService {
     }
 
     // 상세 상세 조회
-    public VehicleCommonResponseDto readOne(Long vId) {
+    public VehicleDetailResponseDto readOne(Long vId) {
 
-        return new VehicleCommonResponseDto(vehicleRepository.findByIdAndIsValid(vId, true).orElseThrow(()->{
+        Vehicle vehicle = vehicleRepository.findByIdAndIsValid(vId, true).orElseThrow(() -> {
             throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
-        }));
+        });
+
+        Member member = memberRepository.findByIdAndIsValid(vehicle.getOwnerId(), true).orElseThrow(()->{
+            throw new CustomException(StatusCode.USER_NOT_FOUND);
+        });
+
+        return new VehicleDetailResponseDto(vehicle, member);
+    }
+
+    // 등록한 상품 수정
+    public VehicleDetailResponseDto updatePage(Long vId, Long ownerId) {
+
+        Vehicle vehicle = vehicleRepository.findByIdAndIsValid(vId, true).orElseThrow(() -> {
+            throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
+        });
+
+        if (!vehicle.getOwnerId().equals(ownerId)) {
+            throw new CustomException(StatusCode.INVALID_AUTH_UPDATE);
+        }
+
+        Member member = memberRepository.findByIdAndIsValid(ownerId, true).orElseThrow(()->{
+            throw new CustomException(StatusCode.USER_NOT_FOUND);
+        });
+
+        return new VehicleDetailResponseDto(vehicle, member);
     }
 
     // 등록한 상품 조회
@@ -125,8 +154,6 @@ public class VehicleService {
                             .price(vehicle.getPrice())
                             .location(vehicle.getLocation())
                             .createdAt(vehicle.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                            .startDate("2022-09-14") // delete later
-                            .endDate("2022-09-14") // delete later
                             .build()
             );
         }
@@ -135,24 +162,63 @@ public class VehicleService {
 
     // 상품 수정
     @Transactional
-    public String update(Long vId, VehicleRequestDto requestDto) {
+    public String update(Long vId, VehicleRequestDto requestDto, Long ownerId) {
 
         Vehicle vehicle = vehicleRepository.findByIdAndIsValid(vId, true).orElseThrow(()->{
             throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
         });
 
-        vehicle.update(requestDto);
+        if (!vehicle.getOwnerId().equals(ownerId)) {
+            throw new CustomException(StatusCode.INVALID_AUTH_UPDATE);
+        }
+
+        List<VehicleImage> vehicleImages = vehicleImageRepository.findAllByVehicle_Id(vId);
+        for (VehicleImage vehicleImage : vehicleImages) {
+
+            String imageUrl = vehicleImage.getImageUrl();
+            String key = imageUrl.substring(imageUrl.lastIndexOf("/")+1);
+            awsS3Service.deleteFile(key);
+        }
+        vehicleImageRepository.deleteAllByVehicle_Id(vId);
+
+        List<MultipartFile> multipartFiles = requestDto.getImageList();
+
+        List<String> imageUrlList = awsS3Service.uploadFile(multipartFiles);
+
+        for (String imageUrl : imageUrlList) {
+            vehicleImageRepository.save(
+                    VehicleImage.builder()
+                            .imageUrl(imageUrl)
+                            .vehicle(vehicle)
+                            .build()
+            );
+        }
+
+        vehicle.update(requestDto, ownerId, imageUrlList.get(0));
 
         return vehicle.getVname();
     }
 
     // 상품 삭제
     @Transactional
-    public String delete(Long vId) {
+    public String delete(Long vId, Long ownerId) {
 
         Vehicle vehicle = vehicleRepository.findByIdAndIsValid(vId, true).orElseThrow(()->{
             throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
         });
+
+        if (!vehicle.getOwnerId().equals(ownerId)) {
+            throw new CustomException(StatusCode.INVALID_AUTH_UPDATE);
+        }
+
+        List<VehicleImage> vehicleImages = vehicleImageRepository.findAllByVehicle_Id(vId);
+        for (VehicleImage vehicleImage : vehicleImages) {
+
+            String imageUrl = vehicleImage.getImageUrl();
+            String key = imageUrl.substring(imageUrl.lastIndexOf("/")+1);
+            awsS3Service.deleteFile(key);
+        }
+        vehicleImageRepository.deleteAllByVehicle_Id(vId);
 
         vehicle.delete();
 
