@@ -85,7 +85,7 @@ public class Vehicle extends Timestamped {
     @Column(nullable = false)
     private String fuelEfficiency;
 
-    public Vehicle update(VehicleRequestDto requestDto) {
+    public void update(VehicleRequestDto requestDto) {
         this.ownerId = requestDto.getOwnerId();
         this.price = requestDto.getPrice();
         this.description = requestDto.getDescription();
@@ -97,18 +97,11 @@ public class Vehicle extends Timestamped {
         this.passengers = requestDto.getPassengers();
         this.transmission = requestDto.getTransmission();
         this.fuelEfficiency = requestDto.getFuelEfficiency();
-
-        return this;
     }
 
-    public Vehicle delete() {
+    public void delete() {
         this.isValid = false;
-
-        return this;
     }
 
-    // OpenDate 테이블과 연관관계
-
-    // Order????
 
 }

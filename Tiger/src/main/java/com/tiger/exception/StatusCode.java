@@ -10,9 +10,21 @@ public enum StatusCode {
 
     /* 200 : 요청 성공 */
     SUCCESS(HttpStatus.OK, "요청에 성공하였습니다."),
+    SCHEDULE_SUCCESS(HttpStatus.OK, "차량 스케줄링에 성공하였습니다."),
+
+    USER_CREATED(HttpStatus.CREATED, "회원가입에 성공하셨습니다."),
+    LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공하셨습니다."),
+    LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃에 성공하셨습니다."),
+
+
+    VEHICLE_CREATED(HttpStatus.CREATED, "차량 등록에 성공하셨습니다."),
+    VEHICLE_UPDATED(HttpStatus.OK, "차량 정보 수정에 성공하셨습니다."),
+    VEHICLE_DELETED(HttpStatus.OK, "차량 삭제에 성공하셨습니다."),
+
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
-
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "유효하지 않은 비밀번호입니다."),
+    INVALID_EMAIL(HttpStatus.BAD_REQUEST, "유효하지 않은 이메일입니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "권한 정보가 없는 토큰입니다."),

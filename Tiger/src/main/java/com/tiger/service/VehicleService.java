@@ -2,8 +2,11 @@ package com.tiger.service;
 
 import com.tiger.domain.vehicle.Vehicle;
 import com.tiger.domain.vehicle.VehicleImage;
+import com.tiger.domain.vehicle.dto.VehicleOwnerResponseDto;
 import com.tiger.domain.vehicle.dto.VehicleRequestDto;
-import com.tiger.domain.vehicle.dto.VehicleResponseDto;
+import com.tiger.domain.vehicle.dto.VehicleCommonResponseDto;
+import com.tiger.exception.CustomException;
+import com.tiger.exception.StatusCode;
 import com.tiger.repository.VehicleImageRepository;
 import com.tiger.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +29,7 @@ public class VehicleService {
 
     // 상품 등록
     @Transactional
-    public Vehicle create(VehicleRequestDto requestDto) {
+    public String create(VehicleRequestDto requestDto) {
 
         List<MultipartFile> multipartFiles = requestDto.getMultipartFiles();
 
@@ -47,9 +51,6 @@ public class VehicleService {
                 .fuelEfficiency(requestDto.getFuelEfficiency())
                 .build();
 
-        // 사진 업로드
-
-
         for (String imageUrl : imageUrlList) {
             vehicleImageRepository.save(
                 VehicleImage.builder()
@@ -59,26 +60,29 @@ public class VehicleService {
             );
         }
 
-        return vehicleRepository.save(vehicle);
+        return vehicleRepository.save(vehicle).getName();
     }
 
     // 종류별 상품 조회
-    public List<VehicleResponseDto> readAllByType(String type) {
+    public List<VehicleCommonResponseDto> readAllByType(String type) {
 
-        List<Vehicle> vehicleList = vehicleRepository.findAllByTypeAndIsValidOrderByModifiedAtDesc(type, true).orElseThrow(()-> new IllegalArgumentException("유효하지 않은 차종입니다."));
+        List<Vehicle> vehicleList = vehicleRepository.findAllByTypeAndIsValidOrderByModifiedAtDesc(type, true).orElseThrow(()-> {
+            throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
+        });
 
-        List<VehicleResponseDto> vehicleResponseDtos = new ArrayList<>();
+        List<VehicleCommonResponseDto> vehicleCommonResponseDtos = new ArrayList<>();
 
         for (Vehicle vehicle : vehicleList) {
 
-            vehicleResponseDtos.add(
-                VehicleResponseDto.builder()
+            vehicleCommonResponseDtos.add(
+                VehicleCommonResponseDto.builder()
+                    .vid(vehicle.getId())
                     .ownerId(vehicle.getOwnerId())
                     .price(vehicle.getPrice())
                     .description(vehicle.getDescription())
                     .location(vehicle.getLocation())
-                    .vehicleImages(vehicle.getImages().stream().map(VehicleImage::getImageUrl).collect(Collectors.toList()))
-                    .name(vehicle.getName())
+                    .imageList(vehicle.getImages().stream().map(VehicleImage::getImageUrl).collect(Collectors.toList()))
+                    .vname(vehicle.getName())
                     .type(vehicle.getType())
                     .years(vehicle.getYears())
                     .fuelType(vehicle.getFuelType())
@@ -88,38 +92,68 @@ public class VehicleService {
                     .build());
 
         }
-        return vehicleResponseDtos;
+        return vehicleCommonResponseDtos;
     }
 
     // 상세 상세 조회
-    public Vehicle readOne(Long vId) {
+    public VehicleCommonResponseDto readOne(Long vId) {
 
-        return vehicleRepository.findByIdAndIsValid(vId, true).
-                orElseThrow(()-> new IllegalArgumentException("유효하지 않은 상품 식별번호입니다."));
+        return new VehicleCommonResponseDto(vehicleRepository.findByIdAndIsValid(vId, true).orElseThrow(()->{
+            throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
+        }));
     }
 
     // 등록한 상품 조회
-    public List<Vehicle> readAllByOwnerId(Long ownerId) {
+    public List<VehicleOwnerResponseDto> readAllByOwnerId(Long ownerId) {
 
-        return vehicleRepository.findAllByOwnerIdAndIsValidOrderByCreatedAtDesc(ownerId, true).orElseThrow(()-> new IllegalArgumentException("유효하지 않은 오너 식별번호입니다."));
+        List<Vehicle> vehicleList = vehicleRepository.findAllByOwnerIdAndIsValidOrderByCreatedAtDesc(ownerId, true).orElseThrow(()-> {
+            throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
+        });
+
+        List<VehicleOwnerResponseDto> vehicleOwnerResponseDtos = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicleList) {
+
+            vehicleOwnerResponseDtos.add(
+                    VehicleOwnerResponseDto.builder()
+                            .vid(vehicle.getId())
+                            .thumbnail(vehicle.getThumbnail())
+                            .vname(vehicle.getName())
+                            .price(vehicle.getPrice())
+                            .location(vehicle.getLocation())
+                            .createdAt(vehicle.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                            .startDate("2022-09-14") // delete later
+                            .endDate("2022-09-14") // delete later
+                            .build()
+            );
+        }
+        return vehicleOwnerResponseDtos;
     }
 
     // 상품 수정
     @Transactional
-    public Vehicle update(Long vId, VehicleRequestDto requestDto) {
+    public String update(Long vId, VehicleRequestDto requestDto) {
 
-        Vehicle vehicle = VehicleService.this.readOne(vId);
+        Vehicle vehicle = vehicleRepository.findByIdAndIsValid(vId, true).orElseThrow(()->{
+            throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
+        });
 
-        return vehicle.update(requestDto);
+        vehicle.update(requestDto);
+
+        return vehicle.getName();
     }
 
     // 상품 삭제
     @Transactional
-    public Vehicle delete(Long vId) {
+    public String delete(Long vId) {
 
-        Vehicle vehicle = VehicleService.this.readOne(vId);
+        Vehicle vehicle = vehicleRepository.findByIdAndIsValid(vId, true).orElseThrow(()->{
+            throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
+        });
 
-        return vehicle.delete();
+        vehicle.delete();
+
+        return vehicle.getName();
     }
 
     // 상품 수정 페이지 (오너 마이페이지)

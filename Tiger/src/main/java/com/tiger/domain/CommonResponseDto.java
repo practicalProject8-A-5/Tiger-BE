@@ -12,8 +12,8 @@ public class CommonResponseDto<T> {
     private Status status;
     private T output;
 
-    public static <T> CommonResponseDto<T> success(T output) {
-        return new CommonResponseDto<>(true, new Status(StatusCode.SUCCESS.getHttpStatus().toString(), StatusCode.SUCCESS.getMessage()), output);
+    public static <T> CommonResponseDto<T> success(StatusCode statusCode,T output) {
+        return new CommonResponseDto<>(true, new Status(statusCode.getHttpStatus().toString(), statusCode.getMessage()), output);
     }
 
     public static <T> CommonResponseDto<T> fail(StatusCode statusCode) {
