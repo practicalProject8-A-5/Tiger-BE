@@ -13,6 +13,7 @@ public class VehicleOwnerResponseDto {
 
     private Long vid;
     private String thumbnail;
+    private String vbrand;
     private String vname;
     private Integer price;
     private String location;

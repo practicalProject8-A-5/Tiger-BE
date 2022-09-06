@@ -33,4 +33,8 @@ public class Member extends Timestamped {
 
     @Column(nullable = false)
     private boolean isValid;
+
+    // 카카오 ID
+    @Column
+    private String kakaoId;
 }

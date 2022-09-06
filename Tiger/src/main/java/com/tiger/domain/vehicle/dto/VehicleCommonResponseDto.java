@@ -32,7 +32,10 @@ public class VehicleCommonResponseDto {
     // 상품 이미지
     private List<String> imageList;
 
-    // 차 이름(브랜드 + 모델명)
+    // 차 브랜드
+    private String vbrand;
+
+    // 차 이름
     private String vname;
 
     // 차 타입(세단, 쿠페, 왜건, SUV, 해치백, 리무진, 밴, 픽업트럭)
@@ -61,7 +64,8 @@ public class VehicleCommonResponseDto {
         this.description = vehicle.getDescription();
         this.location = vehicle.getLocation();
         this.imageList = vehicle.getImages().stream().map(VehicleImage::getImageUrl).collect(Collectors.toList());
-        this.vname = vehicle.getName();
+        this.vbrand = vehicle.getVbrand();
+        this.vname = vehicle.getVname();
         this.type = vehicle.getType();
         this.years = vehicle.getYears();
         this.fuelType = vehicle.getFuelType();

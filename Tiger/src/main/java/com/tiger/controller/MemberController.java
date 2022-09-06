@@ -1,6 +1,7 @@
 package com.tiger.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tiger.domain.CommonResponseDto;
 import com.tiger.domain.TokenDto;
 import com.tiger.domain.member.Member;
@@ -24,7 +25,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-
+    // 회원가입
     @PostMapping("/register")
     public CommonResponseDto<?> register(@RequestBody RegisterRequestDto registerRequestDto) {
 
@@ -33,7 +34,7 @@ public class MemberController {
         return CommonResponseDto.success(StatusCode.USER_CREATED, name);
     }
 
-
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
 
@@ -48,9 +49,11 @@ public class MemberController {
         return ResponseEntity.ok().headers(headers)
                 .body(CommonResponseDto.success(StatusCode.LOGIN_SUCCESS,
                         Map.of("email", member.getEmail(),
-                                "name", member.getName())));
+                                "name", member.getName(),
+                                "tel", member.getTel())));
     }
 
+    // 로그아웃
     @DeleteMapping("/logout")
     public CommonResponseDto<?> logout(HttpServletRequest httpServletRequest) {
 

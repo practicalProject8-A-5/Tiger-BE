@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -57,9 +56,14 @@ public class Vehicle extends Timestamped {
     ==============================================
      */
 
-    // 차 이름(브랜드 + 모델명)
+    // 차 브랜드
     @Column(nullable = false)
-    private String name;
+    private String vbrand;
+
+    // 차 이름
+    @Column(nullable = false)
+    private String vname;
+
 
     // 차 타입(경형, 중형, 대형, 승합RV, 수입)
     @Column(nullable = false)
@@ -90,7 +94,8 @@ public class Vehicle extends Timestamped {
         this.price = requestDto.getPrice();
         this.description = requestDto.getDescription();
         this.location = requestDto.getLocation();
-        this.name = requestDto.getName();
+        this.vbrand = requestDto.getVbrand();
+        this.vname = requestDto.getVname();
         this.type = requestDto.getType();
         this.years = requestDto.getYears();
         this.fuelType = requestDto.getFuelType();

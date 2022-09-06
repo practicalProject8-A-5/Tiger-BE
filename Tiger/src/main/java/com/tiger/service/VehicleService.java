@@ -42,7 +42,8 @@ public class VehicleService {
                 .location(requestDto.getLocation())
                 .isValid(true)
                 .thumbnail(imageUrlList.get(0))
-                .name(requestDto.getName())
+                .vbrand(requestDto.getVbrand())
+                .vname(requestDto.getVname())
                 .type(requestDto.getType())
                 .years(requestDto.getYears())
                 .fuelType(requestDto.getFuelType())
@@ -60,7 +61,7 @@ public class VehicleService {
             );
         }
 
-        return vehicleRepository.save(vehicle).getName();
+        return vehicleRepository.save(vehicle).getVname();
     }
 
     // 종류별 상품 조회
@@ -82,7 +83,8 @@ public class VehicleService {
                     .description(vehicle.getDescription())
                     .location(vehicle.getLocation())
                     .imageList(vehicle.getImages().stream().map(VehicleImage::getImageUrl).collect(Collectors.toList()))
-                    .vname(vehicle.getName())
+                    .vbrand(vehicle.getVbrand())
+                    .vname(vehicle.getVname())
                     .type(vehicle.getType())
                     .years(vehicle.getYears())
                     .fuelType(vehicle.getFuelType())
@@ -118,7 +120,8 @@ public class VehicleService {
                     VehicleOwnerResponseDto.builder()
                             .vid(vehicle.getId())
                             .thumbnail(vehicle.getThumbnail())
-                            .vname(vehicle.getName())
+                            .vbrand(vehicle.getVbrand())
+                            .vname(vehicle.getVname())
                             .price(vehicle.getPrice())
                             .location(vehicle.getLocation())
                             .createdAt(vehicle.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
@@ -140,7 +143,7 @@ public class VehicleService {
 
         vehicle.update(requestDto);
 
-        return vehicle.getName();
+        return vehicle.getVname();
     }
 
     // 상품 삭제
@@ -153,21 +156,6 @@ public class VehicleService {
 
         vehicle.delete();
 
-        return vehicle.getName();
+        return vehicle.getVname();
     }
-
-    // 상품 수정 페이지 (오너 마이페이지)
-
-    /* 상품 검색
-    public List<Vehicle> search(VehicleSearch vehicleSearch) {
-        String location = vehicleSearch.getLocation();
-        String startDate = vehicleSearch.getStartDate();
-        String endDate = vehicleSearch.getEndDate();
-        String type = vehicleSearch.getType();
-
-        vehicleRepository.findAllByLocationAndStartDateAntEndDateAndType(location, startDate, endDate, type);
-
-    }
-    */
-
 }

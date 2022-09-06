@@ -25,8 +25,11 @@ public class VehicleRequestDto {
     // 상품 이미지
     private List<MultipartFile> multipartFiles;
 
-    // 차 이름(브랜드 + 모델명)
-    private String name;
+    // 차 브랜드
+    private String vbrand;
+
+    // 차 이름
+    private String vname;
 
     // 차 타입(경형, 중형, 대형, 승합RV, 수입)
     private String type;
