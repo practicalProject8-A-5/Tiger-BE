@@ -49,6 +49,7 @@ public class SecurityConfig {
             .antMatchers("/token/**").permitAll()
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/api/member/**").permitAll()
+            .antMatchers("/user/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/vehicle/**").permitAll()
             .anyRequest().authenticated();
 

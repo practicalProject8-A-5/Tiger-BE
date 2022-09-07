@@ -25,6 +25,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+
     // 회원가입
     @PostMapping("/register")
     public CommonResponseDto<?> register(@RequestBody RegisterRequestDto registerRequestDto) {
