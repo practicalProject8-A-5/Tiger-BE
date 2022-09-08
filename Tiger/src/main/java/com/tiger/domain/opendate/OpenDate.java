@@ -1,7 +1,6 @@
 package com.tiger.domain.opendate;
 
 import com.tiger.domain.Timestamped;
-import com.tiger.domain.opendate.dto.OpenDateRequestDto;
 import com.tiger.domain.vehicle.Vehicle;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,11 +38,11 @@ public class OpenDate extends Timestamped {
 
     }
 
-    public void updateOpenDate(OpenDateRequestDto openDateRequestDto){
-        this.startDate = openDateRequestDto.getStartDate();
-        this.endDate =openDateRequestDto.getEndDate();
-
-    }
+//    public void updateOpenDate(OpenDateRequestDto openDateRequestDto){
+//        this.startDate = openDateRequestDto.getStartDate();
+//        this.endDate =openDateRequestDto.getEndDate();
+//
+//    }
 
 
 

@@ -4,18 +4,19 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+@Setter
 @Getter
-@RequiredArgsConstructor
-public class OpenDateRequestDto {
+@NoArgsConstructor
+@ToString
 
+public class OpenDateRequestDto {
     private LocalDate startDate;
     private LocalDate endDate;
 
 
     @Builder
-    public OpenDateRequestDto(LocalDate startDate, LocalDate endDate) {
+    public OpenDateRequestDto(LocalDate startDate) {
         this.startDate = startDate;
-        this.endDate = endDate;
 
     }
 }

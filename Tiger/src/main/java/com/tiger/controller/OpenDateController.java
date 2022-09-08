@@ -1,7 +1,7 @@
 package com.tiger.controller;
 
 import com.tiger.domain.CommonResponseDto;
-import com.tiger.domain.opendate.dto.OpenDateRequestDto;
+import com.tiger.domain.opendate.dto.OpenDateListRequestDto;
 import com.tiger.service.OpenDateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,9 +23,9 @@ public class OpenDateController {
     public CommonResponseDto<?> createOpenDate(@PathVariable Long vid,
                                             @RequestBody
                                             @DateTimeFormat(pattern = "yyyy-MM-dd")
-                                            OpenDateRequestDto openDateRequestDto) {
+                                            OpenDateListRequestDto openDateListRequestDto) {
 
-       openDateService.createOpenDate(openDateRequestDto,vid);
+       openDateService.createOpenDate(openDateListRequestDto,vid);
 
         return CommonResponseDto.success(SCHEDULE_SUCCESS,null);
     }

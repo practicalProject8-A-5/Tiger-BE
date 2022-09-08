@@ -2,7 +2,7 @@ package com.tiger.utils;
 
 import com.tiger.domain.member.Member;
 import com.tiger.domain.opendate.OpenDate;
-import com.tiger.domain.opendate.dto.OpenDateRequestDto;
+
 import com.tiger.exception.CustomException;
 import com.tiger.repository.MemberRepository;
 import com.tiger.repository.OpenDateRepository;
@@ -36,38 +36,61 @@ public class CheckUtil {
         );
     }
 
-
-    //openDate 검증
     @Transactional(readOnly = true)
-    public Long validateOpenDate(OpenDateRequestDto openDateRequestDto, Long vid) {
-        List<OpenDate> openDateList = openDateRepository.findAllByVehicleIdOrderByStartDateAsc(vid).orElseThrow(() -> new CustomException(VEHICLE_NOT_FOUND));
-        LocalDate requestStartDate = openDateRequestDto.getStartDate();
-        LocalDate requestEndDate = openDateRequestDto.getEndDate();
+    public void validateClassifiedList(OpenDate requestOpenDate, Long vid) {
 
-        for (OpenDate openDate : openDateList) {
-            LocalDate findStartDate = openDate.getStartDate();
-            LocalDate findEndDate = openDate.getEndDate();
+        List<OpenDate> findOpenDateList = openDateRepository.findAllByVehicleIdOrderByStartDateAsc(vid).orElseThrow(() -> new CustomException(VEHICLE_NOT_FOUND));
 
-            if (requestEndDate.isBefore(findStartDate)){ // requestEndDate가 DB_startDate보다 과거 시간 무조건 인서트
-                return null;
+        LocalDate requestStartDate = requestOpenDate.getStartDate();
+        LocalDate requestEndDate = requestOpenDate.getEndDate();
+
+
+        for (OpenDate findOpenDate : findOpenDateList) { // DB에서 가져와서 하나씩 검증
+            LocalDate findStartDate = findOpenDate.getStartDate();
+            LocalDate findEndDate = findOpenDate.getEndDate();
+
+            if(requestStartDate.isEqual(requestEndDate))
+
+            if (requestEndDate.isBefore(findStartDate)) { // requestEndDate가 DB_startDate보다 과거 시간이면 무조건 인서트
+                openDateRepository.save(requestOpenDate);
+            }
+            if(requestStartDate.isBefore(findStartDate) && requestEndDate.isAfter(findEndDate)){ // 8.12~8.16 => 8.11~8.17
+                openDateRepository.save(requestOpenDate);
+                openDateRepository.delete(findOpenDate);
+
+            }
+            if (requestStartDate.isAfter(findStartDate) && requestEndDate.isBefore(findEndDate)){ //8.12~8.16 => 8.13 ~8.15
+                openDateRepository.save(requestOpenDate);
+                openDateRepository.delete(findOpenDate);
             }
 
-            if(requestStartDate.isAfter(findEndDate)) { // 인자보다 미래 시간
-                System.out.println("건너뛰기~~~");continue;
-            }
-            if (findStartDate.isAfter(requestStartDate) && findStartDate.isBefore(requestEndDate)){
-                return openDate.getId();
-            }
+            if(requestStartDate.isEqual(findStartDate)){ // 8.12~8.16 => 8.12~8.14 or 8.12~8.19
+                openDateRepository.save(requestOpenDate);
+                openDateRepository.delete(findOpenDate);
 
-            if ((requestStartDate.isAfter(findStartDate) || requestStartDate.isEqual(findStartDate))
-                    && (requestStartDate.isBefore(findEndDate) || findStartDate.isEqual(findEndDate))) { // 8.12~ 8.17 ->  8.12~ or 8.13~,,, 전부 업데이트
-                System.out.println("여기 들어 감");
-
-                return openDate.getId();
             }
+            if (requestEndDate.isEqual(findEndDate)){ // 8.12~8.16 => 8.08 ~8.16 or 8.13~8.16
+                openDateRepository.save(requestOpenDate);
+                openDateRepository.delete(findOpenDate);
+            }
+//            if (findStartDate.isAfter(requestStartDate) && findStartDate.isBefore(requestEndDate)) {
+//                return openDate.getId();
+//            }
+//
+//            if ((requestStartDate.isAfter(findStartDate) || requestStartDate.isEqual(findStartDate))
+//                    && (requestStartDate.isBefore(findEndDate) || findStartDate.isEqual(findEndDate))) { // 8.12~ 8.17 ->  8.12~ or 8.13~,,, 전부 업데이트
+//                System.out.println("여기 들어 감");
+//
+//                return openDate.getId();
+//            }
+//
+//
+//
+//        return null;
 
 
         }
-        return null;
+
+
     }
 }
