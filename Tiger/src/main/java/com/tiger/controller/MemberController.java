@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tiger.domain.CommonResponseDto;
 import com.tiger.domain.TokenDto;
 import com.tiger.domain.member.Member;
+import com.tiger.domain.member.dto.EmailCheckRequestDto;
 import com.tiger.domain.member.dto.LoginRequestDto;
 import com.tiger.domain.member.dto.RegisterRequestDto;
 import com.tiger.exception.StatusCode;
@@ -63,4 +64,15 @@ public class MemberController {
         return CommonResponseDto.success(StatusCode.LOGOUT_SUCCESS, name);
     }
 
+    @PostMapping("/emailCheck")
+    public CommonResponseDto<?> emailCheck(@RequestBody EmailCheckRequestDto emailCheckRequestDto){
+
+        boolean result = memberService.emailCheck(emailCheckRequestDto);
+
+        if (result) {
+            return CommonResponseDto.fail(StatusCode.EMAIL_ALREADY_EXISTS);
+        }
+
+        return CommonResponseDto.success(StatusCode.USABLE_EMAIL, "");
+    }
 }

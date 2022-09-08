@@ -8,6 +8,7 @@ import com.tiger.config.security.jwt.TokenProvider;
 import com.tiger.domain.TokenDto;
 import com.tiger.domain.UserDetailsImpl;
 import com.tiger.domain.member.Member;
+import com.tiger.domain.member.dto.EmailCheckRequestDto;
 import com.tiger.domain.member.dto.KakaoUserInfoDto;
 import com.tiger.domain.member.dto.LoginRequestDto;
 import com.tiger.domain.member.dto.RegisterRequestDto;
@@ -103,6 +104,12 @@ public class MemberService {
         return memberRepository.findByEmailAndIsValid(email, true).orElseThrow(() -> {
             throw new CustomException(StatusCode.INVALID_EMAIL);
         });
+    }
+
+    public boolean emailCheck(EmailCheckRequestDto emailCheckRequestDto) {
+
+        return memberRepository.existsByEmail(emailCheckRequestDto.getEmail());
+
     }
 }
 

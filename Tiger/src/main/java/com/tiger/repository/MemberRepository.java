@@ -13,4 +13,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByIdAndIsValid(Long id, boolean isValid);
 
     Optional<Member> findByKakaoUserIdAndIsValid(String kakaoUserId, boolean isValid);
+
+    boolean existsByEmail(String email);
 }
