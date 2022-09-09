@@ -84,7 +84,7 @@ public class TokenProvider {
         } catch (SecurityException | MalformedJwtException e) {
             log.info("유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT token 입니다.");
+            log.info("만료된 JWT token 입니다."); // 여기에서 토큰 재발급
             // 토큰 재발급 요청 처리
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰 입니다.");

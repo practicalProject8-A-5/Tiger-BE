@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@RestController @RequestMapping("/api/member")
+@RestController
+@RequestMapping("/api/member")
 public class MemberController {
 
     private final MemberService memberService;
@@ -64,8 +66,9 @@ public class MemberController {
         return CommonResponseDto.success(StatusCode.LOGOUT_SUCCESS, name);
     }
 
+    // 이메일 검증
     @PostMapping("/emailCheck")
-    public CommonResponseDto<?> emailCheck(@RequestBody EmailCheckRequestDto emailCheckRequestDto){
+    public CommonResponseDto<?> emailCheck(@RequestBody EmailCheckRequestDto emailCheckRequestDto) {
 
         boolean result = memberService.emailCheck(emailCheckRequestDto);
 
@@ -75,4 +78,28 @@ public class MemberController {
 
         return CommonResponseDto.success(StatusCode.USABLE_EMAIL, "");
     }
+
+
+//    @PostMapping("/reissue")
+//    public ResponseEntity<?> reissue(HttpServletRequest httpServletRequest) {
+//
+//        HashMap<String, Object> tokenAndMember = memberService.reissue(httpServletRequest);
+//
+//        TokenDto tokenDto = tokenAndMember.get("TokenDto");
+//        Member member = tokenAndMember.get("Member");
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Authorization", token.getAuthorization());
+//        headers.add("RefreshToken", token.getRefreshToken());
+//
+//        return ResponseEntity.ok().headers(headers)
+//                .body(CommonResponseDto.success(StatusCode.TOKEN_REISSUED,
+//                        Map.of("email", member.getEmail(),
+//                                "name", member.getName(),
+//                                "tel", member.getTel())));
+//
+//    }
+
+
+
 }
