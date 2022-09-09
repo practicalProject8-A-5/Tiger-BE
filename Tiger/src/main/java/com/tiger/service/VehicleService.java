@@ -32,6 +32,8 @@ public class VehicleService {
 
     private final MemberRepository memberRepository;
 
+    private static final String DEFAULT_VEHICLE_IMAGE = "https://mygitpher.s3.ap-northeast-2.amazonaws.com/DEFAULT_VEHICLE_IMAGE.png";
+
     // 상품 등록
     @Transactional
     public String create(VehicleRequestDto requestDto, Long ownerId) {
@@ -220,7 +222,7 @@ public class VehicleService {
         }
         vehicleImageRepository.deleteAllByVehicle_Id(vId);
 
-        vehicle.delete();
+        vehicle.delete(DEFAULT_VEHICLE_IMAGE);
 
         return vehicle.getVname();
     }

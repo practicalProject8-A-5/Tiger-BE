@@ -39,7 +39,7 @@ public class Member extends Timestamped {
     private String kakaoUserId;
 
     // 프로필 사진
-    @Column
+    @Column(nullable = false)
     private String profileImage;
 
 }

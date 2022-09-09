@@ -65,6 +65,8 @@ public class VehicleDetailResponseDto {
     // 오너 전화번호
     private String tel;
 
+    // 오너 프로필 사진
+    private String profileImage;
 
 
     public VehicleDetailResponseDto(Vehicle vehicle, Member member) {
@@ -85,5 +87,6 @@ public class VehicleDetailResponseDto {
         this.oname = member.getName();
         this.email = member.getEmail();
         this.tel = member.getTel();
+        this.profileImage = member.getProfileImage();
     }
 }

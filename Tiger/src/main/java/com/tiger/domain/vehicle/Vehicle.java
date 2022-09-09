@@ -105,8 +105,8 @@ public class Vehicle extends Timestamped {
         this.thumbnail = thumbnail;
     }
 
-    public void delete() {
-        this.thumbnail = "null"; // 나중에 default 이미지를 삽입하기
+    public void delete(String defaultThumbnail) {
+        this.thumbnail = defaultThumbnail;
         this.isValid = false;
     }
 
