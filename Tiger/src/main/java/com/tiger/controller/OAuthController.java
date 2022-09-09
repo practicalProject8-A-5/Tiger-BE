@@ -23,10 +23,8 @@ public class OAuthController {
 
     private final OAuthService oAuthService;
 
-    private final MemberService memberService;
 
-
-    @GetMapping("user/kakao/callback")
+    @GetMapping("/user/kakao/callback")
     public ResponseEntity<?> kakaoLogin(@RequestParam(value = "code") String authorityCode) throws JsonProcessingException {
 
         HashMap<String, Object> tokenAndMember = oAuthService.kakaoLogin(authorityCode);

@@ -87,7 +87,10 @@ public class MemberService {
 
     @Transactional
     public String logout(HttpServletRequest httpServletRequest) {
-        if (!tokenProvider.validateToken(httpServletRequest.getHeader("RefreshToken"))) {
+
+        String refreshToken = httpServletRequest.getHeader("RefreshToken");
+
+        if (!tokenProvider.validateToken(refreshToken)) {
             throw new CustomException(StatusCode.INVALID_AUTH_TOKEN);
         }
         Member member = tokenProvider.getMemberFromAuthentication();
@@ -96,6 +99,7 @@ public class MemberService {
         }
 
         refreshTokenRepository.deleteByMember(member);
+
         return member.getName();
     }
 
