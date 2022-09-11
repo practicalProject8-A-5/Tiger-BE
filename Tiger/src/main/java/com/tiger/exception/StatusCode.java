@@ -11,6 +11,8 @@ public enum StatusCode {
     /* 200 : 요청 성공 */
     SUCCESS(HttpStatus.OK, "요청에 성공하였습니다."),
     SCHEDULE_SUCCESS(HttpStatus.OK, "차량 스케줄링에 성공하였습니다."),
+    GET_SCHEDULE_SUCCESS(HttpStatus.OK, "차량 스케줄링에 성공하였습니다."),
+
     /* 400 BAD_REQUEST : 잘못된 요청 */
 
 

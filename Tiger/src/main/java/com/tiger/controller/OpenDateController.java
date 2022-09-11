@@ -5,9 +5,16 @@ import com.tiger.domain.opendate.dto.OpenDateListRequestDto;
 import com.tiger.service.OpenDateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.tiger.exception.StatusCode.*;
 
 
@@ -32,10 +39,20 @@ public class OpenDateController {
 
     @GetMapping("/schedule/{vid}")
     @ApiOperation(value = "차량 오픈스케줄 수정시, 이미 예약된 날짜 불러오기")
-    public  CommonResponseDto<?> getReservedDate(@PathVariable Long vid){
+    public  CommonResponseDto<?> getOpenAndReservedDate(@PathVariable Long vid){
 
 
-        return CommonResponseDto.fail( DUPLICATE_RESOURCE);
+        List<LocalDate> getOpenDate = openDateService.getOpenAndReservedDate(vid);
+
+        @Getter
+        @AllArgsConstructor
+        class output {
+            private Long vid;
+            private List<LocalDate> OpenDateList;
+        }
+
+
+        return CommonResponseDto.success(GET_SCHEDULE_SUCCESS, new output(vid,getOpenDate));
     }
 
 
