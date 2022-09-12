@@ -80,26 +80,23 @@ public class MemberController {
     }
 
 
-//    @PostMapping("/reissue")
-//    public ResponseEntity<?> reissue(HttpServletRequest httpServletRequest) {
-//
-//        HashMap<String, Object> tokenAndMember = memberService.reissue(httpServletRequest);
-//
-//        TokenDto tokenDto = tokenAndMember.get("TokenDto");
-//        Member member = tokenAndMember.get("Member");
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Authorization", token.getAuthorization());
-//        headers.add("RefreshToken", token.getRefreshToken());
-//
-//        return ResponseEntity.ok().headers(headers)
-//                .body(CommonResponseDto.success(StatusCode.TOKEN_REISSUED,
-//                        Map.of("email", member.getEmail(),
-//                                "name", member.getName(),
-//                                "tel", member.getTel())));
-//
-//    }
+    @PostMapping("/reissue")
+    public ResponseEntity<?> reissue(HttpServletRequest httpServletRequest) {
 
+        HashMap<String, Object> tokenAndMember = memberService.reissue(httpServletRequest);
 
+        TokenDto token = (TokenDto) tokenAndMember.get("Token");
+        Member member = (Member) tokenAndMember.get("Member");
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", token.getAuthorization());
+        headers.add("RefreshToken", token.getRefreshToken());
+
+        return ResponseEntity.ok().headers(headers)
+                .body(CommonResponseDto.success(StatusCode.TOKEN_REISSUED,
+                        Map.of("email", member.getEmail(),
+                                "name", member.getName(),
+                                "tel", member.getTel())));
+
+    }
 }

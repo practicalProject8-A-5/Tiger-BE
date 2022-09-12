@@ -16,6 +16,7 @@ public enum StatusCode {
     LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공하셨습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃에 성공하셨습니다."),
     USABLE_EMAIL(HttpStatus.OK, "사용 가능한 이메일입니다."),
+    TOKEN_REISSUED(HttpStatus.OK, "토큰이 재발급되었습니다."),
 
 
     VEHICLE_CREATED(HttpStatus.CREATED, "차량 등록에 성공하셨습니다."),
@@ -28,10 +29,13 @@ public enum StatusCode {
     INVALID_EMAIL(HttpStatus.BAD_REQUEST, "유효하지 않은 이메일입니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
-    INVALID_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "권한 정보가 없는 토큰입니다."),
     INVALID_AUTH_ORDER(HttpStatus.UNAUTHORIZED, "주문을 한 사용자만 접근할 수 있습니다."),
     INVALID_AUTH_UPDATE(HttpStatus.UNAUTHORIZED, "허용된 사용자만 수정할 수 있습니다."),
     EMAIL_ALREADY_EXISTS(HttpStatus.UNAUTHORIZED, "이미 존재하는 이메일입니다."),
+    INVALID_TOKEN_SIGNATURE(HttpStatus.UNAUTHORIZED, "유효하지 않은 JWT 서명 입니다"),
+    EXPIRED_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 JWT 토큰 입니다"),
+    UNSUPPORTED_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "지원되지 않는 JWT 토큰 입니다"),
+    INVALID_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "잘못된 JWT 토큰 입니다"),
 
     /* 404 NOT_FOUND : Resource를 찾을 수 없음 */
     USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND, "로그인된 사용자만 접근할 수 있습니다."),

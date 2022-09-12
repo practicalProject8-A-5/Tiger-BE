@@ -29,7 +29,7 @@ public class OAuthController {
 
         HashMap<String, Object> tokenAndMember = oAuthService.kakaoLogin(authorityCode);
 
-        TokenDto token = (TokenDto) tokenAndMember.get("TokenDto");
+        TokenDto token = (TokenDto) tokenAndMember.get("Token");
         Member member = (Member) tokenAndMember.get("Member");
 
         HttpHeaders headers = new HttpHeaders();

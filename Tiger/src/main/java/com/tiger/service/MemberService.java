@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -104,5 +106,35 @@ public class MemberService {
         return memberRepository.existsByEmail(emailCheckRequestDto.getEmail());
 
     }
+
+    public HashMap<String, Object> reissue(HttpServletRequest httpServletRequest) {
+
+        String refreshToken = httpServletRequest.getHeader("RefreshToken");
+
+        // 리프레시 토큰 검증
+        if (!tokenProvider.validateToken(refreshToken)) {
+            throw new CustomException(StatusCode.INVALID_AUTH_TOKEN);
+        }
+        Member member = tokenProvider.getMemberFromAuthentication();
+        if (null == member) {
+            throw new CustomException(StatusCode.USER_NOT_FOUND);
+        }
+
+        refreshTokenRepository.deleteByMember(member);
+
+        UserDetailsImpl userDetails = new UserDetailsImpl(member);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "");
+
+        TokenDto token = tokenProvider.generateTokenDto(authentication);
+
+        HashMap<String, Object> tokenAndMember = new HashMap<>();
+        tokenAndMember.put("Token", token);
+        tokenAndMember.put("Member", member);
+
+        return tokenAndMember;
+
+    }
+
+
 }
 

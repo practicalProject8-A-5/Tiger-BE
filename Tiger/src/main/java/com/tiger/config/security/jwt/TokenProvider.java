@@ -4,6 +4,7 @@ import com.tiger.domain.RefreshToken;
 import com.tiger.domain.TokenDto;
 import com.tiger.domain.UserDetailsImpl;
 import com.tiger.domain.member.Member;
+import com.tiger.exception.CustomException;
 import com.tiger.repository.RefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -85,7 +86,6 @@ public class TokenProvider {
             log.info("유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT token 입니다."); // 여기에서 토큰 재발급
-            // 토큰 재발급 요청 처리
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {

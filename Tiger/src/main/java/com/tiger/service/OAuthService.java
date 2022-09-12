@@ -50,7 +50,7 @@ public class OAuthService {
         TokenDto tokenDto = forceLogin(kakaoUser);
 
         HashMap<String, Object> tokenAndMember = new HashMap<>();
-        tokenAndMember.put("TokenDto", tokenDto);
+        tokenAndMember.put("Token", tokenDto);
         tokenAndMember.put("Member", kakaoUser);
 
         return tokenAndMember;
