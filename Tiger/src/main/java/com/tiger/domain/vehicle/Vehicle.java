@@ -43,6 +43,15 @@ public class Vehicle extends Timestamped {
     @Column(nullable = false)
     private String location;
 
+    // 상품 주소: 위도
+    @Column(nullable = false)
+    private String locationX;
+
+    // 상품 주소: 경도
+    @Column(nullable = false)
+    private String locationY;
+
+
     // 상품 활성/비활성
     @Column(nullable = false)
     private Boolean isValid;

@@ -19,6 +19,12 @@ public class VehicleRequestDto {
     // 상품 위치
     private String location;
 
+    // 상품 위치: 위도
+    private String locationX;
+
+    // 상품 위치: 경도
+    private String locationY;
+
     // 상품 이미지
     private List<MultipartFile> imageList;
 

@@ -28,6 +28,12 @@ public class VehicleDetailResponseDto {
     // 상품 위치
     private String location;
 
+    // 상품 위치: 위도
+    private String locationX;
+
+    // 상품 위치: 경도
+    private String locationY;
+
     // 상품 이미지
     private List<String> imageList;
 
@@ -75,6 +81,8 @@ public class VehicleDetailResponseDto {
         this.price = vehicle.getPrice();
         this.description = vehicle.getDescription();
         this.location = vehicle.getLocation();
+        this.locationX = vehicle.getLocationX();
+        this.locationY = vehicle.getLocationY();
         this.imageList = vehicle.getImages().stream().map(VehicleImage::getImageUrl).collect(Collectors.toList());
         this.vbrand = vehicle.getVbrand();
         this.vname = vehicle.getVname();
