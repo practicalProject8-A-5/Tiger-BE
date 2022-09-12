@@ -1,7 +1,6 @@
 package com.tiger.utils;
 
 import com.tiger.domain.member.Member;
-import com.tiger.domain.opendate.OpenDate;
 
 import com.tiger.exception.CustomException;
 import com.tiger.repository.MemberRepository;
@@ -11,9 +10,6 @@ import com.tiger.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.List;
 
 import static com.tiger.exception.StatusCode.*;
 

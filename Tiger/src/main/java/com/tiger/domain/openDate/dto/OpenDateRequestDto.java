@@ -1,4 +1,4 @@
-package com.tiger.domain.opendate.dto;
+package com.tiger.domain.openDate.dto;
 
 import lombok.*;
 

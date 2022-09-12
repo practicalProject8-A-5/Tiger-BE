@@ -1,7 +1,6 @@
 package com.tiger.repository;
 
-import com.tiger.domain.opendate.OpenDate;
-import com.tiger.domain.vehicle.Vehicle;
+import com.tiger.domain.openDate.OpenDate;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.tiger.domain.opendate;
+package com.tiger.domain.openDate;
 
 import com.tiger.domain.Timestamped;
 import com.tiger.domain.vehicle.Vehicle;

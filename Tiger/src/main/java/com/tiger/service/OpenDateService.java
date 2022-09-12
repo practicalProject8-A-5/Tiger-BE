@@ -1,8 +1,8 @@
 package com.tiger.service;
 
-import com.tiger.domain.opendate.OpenDate;
-import com.tiger.domain.opendate.dto.OpenDateListRequestDto;
-import com.tiger.domain.opendate.dto.OpenDateRequestDto;
+import com.tiger.domain.openDate.OpenDate;
+import com.tiger.domain.openDate.dto.OpenDateListRequestDto;
+import com.tiger.domain.openDate.dto.OpenDateRequestDto;
 import com.tiger.domain.vehicle.Vehicle;
 import com.tiger.exception.CustomException;
 import com.tiger.repository.OpenDateRepository;

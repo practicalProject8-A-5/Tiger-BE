@@ -1,7 +1,7 @@
 package com.tiger.controller;
 
 import com.tiger.domain.CommonResponseDto;
-import com.tiger.domain.opendate.dto.OpenDateListRequestDto;
+import com.tiger.domain.openDate.dto.OpenDateListRequestDto;
 import com.tiger.service.OpenDateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,7 +12,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.tiger.exception.StatusCode.*;
