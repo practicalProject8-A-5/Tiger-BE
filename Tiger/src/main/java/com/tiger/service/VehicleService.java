@@ -143,6 +143,10 @@ public class VehicleService {
     // 등록한 상품 조회
     public List<VehicleOwnerResponseDto> readAllByOwnerId(Long ownerId) {
 
+        Member member = memberRepository.findByIdAndIsValid(ownerId, true).orElseThrow(()->{
+            throw new CustomException(StatusCode.USER_NOT_FOUND);
+        });
+
         List<Vehicle> vehicleList = vehicleRepository.findAllByOwnerIdAndIsValidOrderByCreatedAtDesc(ownerId, true).orElseThrow(()-> {
             throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
         });
@@ -156,6 +160,7 @@ public class VehicleService {
                             .vid(vehicle.getId())
                             .thumbnail(vehicle.getThumbnail())
                             .vbrand(vehicle.getVbrand())
+                            .oname(member.getName())
                             .vname(vehicle.getVname())
                             .price(vehicle.getPrice())
                             .location(vehicle.getLocation())
@@ -230,4 +235,12 @@ public class VehicleService {
 
         return vehicle.getVname();
     }
+
+//    public List<VehicleCommonResponseDto> search(VehicleService vehicleService) {
+//
+//
+//
+//
+//
+//    }
 }

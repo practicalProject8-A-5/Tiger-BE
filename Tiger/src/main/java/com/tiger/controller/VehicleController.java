@@ -3,10 +3,7 @@ package com.tiger.controller;
 import com.tiger.domain.CommonResponseDto;
 import com.tiger.domain.UserDetailsImpl;
 import com.tiger.domain.member.Member;
-import com.tiger.domain.vehicle.dto.VehicleCommonResponseDto;
-import com.tiger.domain.vehicle.dto.VehicleDetailResponseDto;
-import com.tiger.domain.vehicle.dto.VehicleOwnerResponseDto;
-import com.tiger.domain.vehicle.dto.VehicleRequestDto;
+import com.tiger.domain.vehicle.dto.*;
 import com.tiger.exception.StatusCode;
 import com.tiger.service.VehicleService;
 import lombok.RequiredArgsConstructor;
@@ -101,4 +98,15 @@ public class VehicleController {
 
         return CommonResponseDto.success(StatusCode.VEHICLE_DELETED, name);
     }
+
+//    @PostMapping("/api/vehicle/search")
+//    public CommonResponseDto<?> search(@RequestBody VehicleSearch) {
+//
+//        List<VehicleCommonResponseDto> vehicleCommonResponseDtos = vehicleService.search(vehicleService);
+//
+//        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleCommonResponseDtos);
+//    }
+
+
+
 }

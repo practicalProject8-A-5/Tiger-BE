@@ -9,5 +9,7 @@ public class VehicleSearch {
     private String startDate;
     private String endDate;
     private String location;
+    private Double locationX;
+    private Double locationY;
     private String type;
 }

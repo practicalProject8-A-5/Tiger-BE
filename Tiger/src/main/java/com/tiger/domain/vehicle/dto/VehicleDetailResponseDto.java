@@ -29,10 +29,10 @@ public class VehicleDetailResponseDto {
     private String location;
 
     // 상품 위치: 위도
-    private String locationX;
+    private Double locationX;
 
     // 상품 위치: 경도
-    private String locationY;
+    private Double locationY;
 
     // 상품 이미지
     private List<String> imageList;
