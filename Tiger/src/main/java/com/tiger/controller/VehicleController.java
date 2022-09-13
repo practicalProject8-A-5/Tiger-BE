@@ -9,8 +9,10 @@ import com.tiger.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -18,6 +20,7 @@ import java.util.List;
 public class VehicleController {
 
     private final VehicleService vehicleService;
+
 
     // 상품 등록
     @PostMapping("/management")
@@ -43,9 +46,20 @@ public class VehicleController {
 
     // 상품 상세 조회
     @GetMapping("/{vId}")
-    public CommonResponseDto<?> readOne(@PathVariable Long vId) {
+    public CommonResponseDto<?> readOne(@PathVariable Long vId,
+                                        @RequestParam String startDate,
+                                        @RequestParam String endDate,
+                                        Model model) {
 
         VehicleDetailResponseDto vehicleDetailResponseDto = vehicleService.readOne(vId);
+
+        if (startDate == null || endDate == null) {
+            startDate = String.valueOf(LocalDate.now());
+            endDate = String.valueOf(LocalDate.now());
+        }
+
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
 
         return CommonResponseDto.success(StatusCode.SUCCESS, vehicleDetailResponseDto);
     }
@@ -100,13 +114,14 @@ public class VehicleController {
     }
 
     @PostMapping("/search")
-    public CommonResponseDto<?> search(@RequestBody VehicleSearch vehicleSearch) {
+    public CommonResponseDto<?> search(@RequestBody VehicleSearch vehicleSearch, Model model) {
 
         List<VehicleCustomResponseDto> vehicleCustomResponseDtos = vehicleService.search(vehicleSearch);
 
+        model.addAttribute("startDate", vehicleSearch.getStartDate());
+        model.addAttribute("endDate", vehicleSearch.getEndDate());
+
         return CommonResponseDto.success(StatusCode.SUCCESS, vehicleCustomResponseDtos);
     }
-
-
 
 }
