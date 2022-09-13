@@ -81,4 +81,5 @@ public class VehicleCommonResponseDto {
         this.transmission = vehicle.getTransmission();
         this.fuelEfficiency = vehicle.getFuelEfficiency();
     }
+
 }

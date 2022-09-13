@@ -99,13 +99,13 @@ public class VehicleController {
         return CommonResponseDto.success(StatusCode.VEHICLE_DELETED, name);
     }
 
-//    @PostMapping("/api/vehicle/search")
-//    public CommonResponseDto<?> search(@RequestBody VehicleSearch) {
-//
-//        List<VehicleCommonResponseDto> vehicleCommonResponseDtos = vehicleService.search(vehicleService);
-//
-//        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleCommonResponseDtos);
-//    }
+    @PostMapping("/search")
+    public CommonResponseDto<?> search(@RequestBody VehicleSearch vehicleSearch) {
+
+        List<VehicleCustomResponseDto> vehicleCustomResponseDtos = vehicleService.search(vehicleSearch);
+
+        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleCustomResponseDtos);
+    }
 
 
 

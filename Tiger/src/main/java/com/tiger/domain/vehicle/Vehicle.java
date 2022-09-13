@@ -1,7 +1,6 @@
 package com.tiger.domain.vehicle;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tiger.domain.Timestamped;
 import com.tiger.domain.order.Orders;
 import com.tiger.domain.vehicle.dto.VehicleRequestDto;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.ArrayList;
 
 @Builder
 @AllArgsConstructor
@@ -104,6 +102,8 @@ public class Vehicle extends Timestamped {
     // 주문목록
     @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Orders> orders;
+
+
 
     public void update(VehicleRequestDto requestDto, Long ownerId, String thumbnail) {
         this.ownerId = ownerId;

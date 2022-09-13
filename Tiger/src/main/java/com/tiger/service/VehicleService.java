@@ -3,13 +3,11 @@ package com.tiger.service;
 import com.tiger.domain.member.Member;
 import com.tiger.domain.vehicle.Vehicle;
 import com.tiger.domain.vehicle.VehicleImage;
-import com.tiger.domain.vehicle.dto.VehicleDetailResponseDto;
-import com.tiger.domain.vehicle.dto.VehicleOwnerResponseDto;
-import com.tiger.domain.vehicle.dto.VehicleRequestDto;
-import com.tiger.domain.vehicle.dto.VehicleCommonResponseDto;
+import com.tiger.domain.vehicle.dto.*;
 import com.tiger.exception.CustomException;
 import com.tiger.exception.StatusCode;
 import com.tiger.repository.MemberRepository;
+import com.tiger.repository.VehicleCustomRepository;
 import com.tiger.repository.VehicleImageRepository;
 import com.tiger.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +29,8 @@ public class VehicleService {
     private final VehicleImageRepository vehicleImageRepository;
 
     private final MemberRepository memberRepository;
+
+    private final VehicleCustomRepository vehicleCustomRepository;
 
     private static final String DEFAULT_VEHICLE_IMAGE = "https://mygitpher.s3.ap-northeast-2.amazonaws.com/DEFAULT_VEHICLE_IMAGE.png";
 
@@ -236,11 +236,16 @@ public class VehicleService {
         return vehicle.getVname();
     }
 
-//    public List<VehicleCommonResponseDto> search(VehicleService vehicleService) {
-//
-//
-//
-//
-//
-//    }
+    public List<VehicleCustomResponseDto> search(VehicleSearch vehicleSearch) {
+
+        String startDate =  vehicleSearch.getStartDate();
+        String endDate = vehicleSearch.getEndDate();
+        String location = vehicleSearch.getLocation();
+        Double locationX = vehicleSearch.getLocationX();
+        Double locationY = vehicleSearch.getLocationY();
+        String type = vehicleSearch.getType();
+
+        return vehicleCustomRepository.searchVehicle(startDate, endDate, locationX, locationY, type);
+    }
+
 }
