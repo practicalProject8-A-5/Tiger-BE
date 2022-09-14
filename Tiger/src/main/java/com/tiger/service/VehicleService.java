@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -238,8 +239,8 @@ public class VehicleService {
 
     public List<VehicleCustomResponseDto> search(VehicleSearch vehicleSearch) {
 
-        String startDate =  vehicleSearch.getStartDate();
-        String endDate = vehicleSearch.getEndDate();
+        LocalDate startDate =  vehicleSearch.getStartDate();
+        LocalDate endDate = vehicleSearch.getEndDate();
         String location = vehicleSearch.getLocation();
         Double locationX = vehicleSearch.getLocationX();
         Double locationY = vehicleSearch.getLocationY();

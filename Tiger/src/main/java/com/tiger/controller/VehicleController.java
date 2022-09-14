@@ -7,12 +7,15 @@ import com.tiger.domain.vehicle.dto.*;
 import com.tiger.exception.StatusCode;
 import com.tiger.service.VehicleService;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.asm.Advice;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -47,21 +50,17 @@ public class VehicleController {
     // 상품 상세 조회
     @GetMapping("/{vId}")
     public CommonResponseDto<?> readOne(@PathVariable Long vId,
-                                        @RequestParam String startDate,
-                                        @RequestParam String endDate,
-                                        Model model) {
+                                        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
 
         VehicleDetailResponseDto vehicleDetailResponseDto = vehicleService.readOne(vId);
 
-        if (startDate == null || endDate == null) {
-            startDate = String.valueOf(LocalDate.now());
-            endDate = String.valueOf(LocalDate.now());
-        }
+        HashMap<String, Object> vehicleDetailResponseDtoAndStartDateAndEndDate = new HashMap<>();
+        vehicleDetailResponseDtoAndStartDateAndEndDate.put("vehicleList", vehicleDetailResponseDto);
+        vehicleDetailResponseDtoAndStartDateAndEndDate.put("startDate", startDate);
+        vehicleDetailResponseDtoAndStartDateAndEndDate.put("endDate", endDate);
 
-        model.addAttribute("startDate", startDate);
-        model.addAttribute("endDate", endDate);
-
-        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleDetailResponseDto);
+        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleDetailResponseDtoAndStartDateAndEndDate);
     }
 
 
@@ -114,14 +113,16 @@ public class VehicleController {
     }
 
     @PostMapping("/search")
-    public CommonResponseDto<?> search(@RequestBody VehicleSearch vehicleSearch, Model model) {
+    public CommonResponseDto<?> search(@RequestBody VehicleSearch vehicleSearch) {
 
         List<VehicleCustomResponseDto> vehicleCustomResponseDtos = vehicleService.search(vehicleSearch);
 
-        model.addAttribute("startDate", vehicleSearch.getStartDate());
-        model.addAttribute("endDate", vehicleSearch.getEndDate());
+        HashMap<String, Object> vehicleCustomResponseDtosAndStartDateAndEndDate = new HashMap<>();
+        vehicleCustomResponseDtosAndStartDateAndEndDate.put("vehicleList", vehicleCustomResponseDtos);
+        vehicleCustomResponseDtosAndStartDateAndEndDate.put("startDate", vehicleSearch.getStartDate());
+        vehicleCustomResponseDtosAndStartDateAndEndDate.put("endDate", vehicleSearch.getEndDate());
 
-        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleCustomResponseDtos);
+        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleCustomResponseDtosAndStartDateAndEndDate);
     }
 
 }

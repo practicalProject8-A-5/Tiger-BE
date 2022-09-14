@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .antMatchers("/api/member/**").permitAll()
                 .antMatchers("/user/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/vehicle/**").permitAll()
-                .antMatchers(HttpMethod.POST, "api/vehicle/search").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/vehicle/search").permitAll()
                 .anyRequest().authenticated();
 
         return http.build();
