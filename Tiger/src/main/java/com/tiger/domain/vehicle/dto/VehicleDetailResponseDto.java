@@ -6,6 +6,7 @@ import com.tiger.domain.vehicle.VehicleImage;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,8 +75,13 @@ public class VehicleDetailResponseDto {
     // 오너 프로필 사진
     private String profileImage;
 
+    // 예약 시작일
+    private LocalDate startDate;
 
-    public VehicleDetailResponseDto(Vehicle vehicle, Member member) {
+    // 예약 종료일
+    private LocalDate endDate;
+
+    public VehicleDetailResponseDto(Vehicle vehicle, Member member, LocalDate startDate, LocalDate endDate) {
         this.vid = vehicle.getId();
         this.ownerId = vehicle.getOwnerId();
         this.price = vehicle.getPrice();
@@ -96,5 +102,7 @@ public class VehicleDetailResponseDto {
         this.email = member.getEmail();
         this.tel = member.getTel();
         this.profileImage = member.getProfileImage();
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 }

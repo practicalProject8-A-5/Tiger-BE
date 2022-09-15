@@ -53,7 +53,7 @@ public class VehicleController {
                                         @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                         @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
 
-        VehicleDetailResponseDto vehicleDetailResponseDto = vehicleService.readOne(vId);
+        VehicleDetailResponseDto vehicleDetailResponseDto = vehicleService.readOne(vId, startDate, endDate);
 
         HashMap<String, Object> vehicleDetailResponseDtoAndStartDateAndEndDate = new HashMap<>();
         vehicleDetailResponseDtoAndStartDateAndEndDate.put("vehicleList", vehicleDetailResponseDto);
@@ -115,10 +115,10 @@ public class VehicleController {
     @PostMapping("/search")
     public CommonResponseDto<?> search(@RequestBody VehicleSearch vehicleSearch) {
 
-        List<VehicleCustomResponseDto> vehicleCustomResponseDtos = vehicleService.search(vehicleSearch);
+        List<VehicleSearchResponseDto> vehicleSearchResponseDtos = vehicleService.search(vehicleSearch);
 
         HashMap<String, Object> vehicleCustomResponseDtosAndStartDateAndEndDate = new HashMap<>();
-        vehicleCustomResponseDtosAndStartDateAndEndDate.put("vehicleList", vehicleCustomResponseDtos);
+        vehicleCustomResponseDtosAndStartDateAndEndDate.put("vehicleList", vehicleSearchResponseDtos);
         vehicleCustomResponseDtosAndStartDateAndEndDate.put("startDate", vehicleSearch.getStartDate());
         vehicleCustomResponseDtosAndStartDateAndEndDate.put("endDate", vehicleSearch.getEndDate());
 

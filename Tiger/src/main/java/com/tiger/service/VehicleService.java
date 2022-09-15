@@ -110,7 +110,7 @@ public class VehicleService {
     }
 
     // 상세 상세 조회
-    public VehicleDetailResponseDto readOne(Long vId) {
+    public VehicleDetailResponseDto readOne(Long vId, LocalDate startDate, LocalDate endDate) {
 
         Vehicle vehicle = vehicleRepository.findByIdAndIsValid(vId, true).orElseThrow(() -> {
             throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
@@ -120,7 +120,7 @@ public class VehicleService {
             throw new CustomException(StatusCode.USER_NOT_FOUND);
         });
 
-        return new VehicleDetailResponseDto(vehicle, member);
+        return new VehicleDetailResponseDto(vehicle, member, startDate, endDate);
     }
 
     // 등록한 상품 수정
@@ -138,7 +138,7 @@ public class VehicleService {
             throw new CustomException(StatusCode.USER_NOT_FOUND);
         });
 
-        return new VehicleDetailResponseDto(vehicle, member);
+        return new VehicleDetailResponseDto(vehicle, member, null, null);
     }
 
     // 등록한 상품 조회
@@ -237,7 +237,7 @@ public class VehicleService {
         return vehicle.getVname();
     }
 
-    public List<VehicleCustomResponseDto> search(VehicleSearch vehicleSearch) {
+    public List<VehicleSearchResponseDto> search(VehicleSearch vehicleSearch) {
 
         LocalDate startDate =  vehicleSearch.getStartDate();
         LocalDate endDate = vehicleSearch.getEndDate();
@@ -246,7 +246,19 @@ public class VehicleService {
         Double locationY = vehicleSearch.getLocationY();
         String type = vehicleSearch.getType();
 
-        return vehicleCustomRepository.searchVehicle(startDate, endDate, locationX, locationY, type);
+
+        // 나중에 List<VehicleCustomResponseDto>를 startDate과 endDate이 포함된 List<VehicleSearchResponseDto로 감싸기>
+
+        List<VehicleCustomResponseDto> vehicleCustomResponseDtos = vehicleCustomRepository.searchVehicle(startDate, endDate, locationX, locationY, type);
+
+
+        List<VehicleSearchResponseDto> vehicleSearchResponseDtos = new ArrayList<>();
+
+        for (VehicleCustomResponseDto vehicleCustomResponseDto : vehicleCustomResponseDtos) {
+            vehicleSearchResponseDtos.add(new VehicleSearchResponseDto(vehicleCustomResponseDto, startDate, endDate));
+        }
+
+        return vehicleSearchResponseDtos;
     }
 
 }
