@@ -5,6 +5,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tiger.domain.openDate.QOpenDate;
 import com.tiger.domain.order.QOrders;
+import com.tiger.domain.order.Status;
 import com.tiger.domain.vehicle.QVehicle;
 import com.tiger.domain.vehicle.dto.QVehicleCustomResponseDto;
 import com.tiger.domain.vehicle.dto.VehicleCustomResponseDto;
@@ -30,7 +31,7 @@ public class VehicleCustomRepository {
                 .from(vehicle)
                 .where(vehicle.type.eq(type).and(vehicle.locationX.between((locationX-0.3), (locationX+0.3))).and(vehicle.locationY.between((locationY-0.3), (locationY+0.3)))
                         .and(vehicle.id.in(JPAExpressions.select(openDate.vehicle.id).from(openDate).where(openDate.startDate.loe(startDate).and(openDate.endDate.goe(endDate).and(
-                                openDate.vehicle.id.notIn(JPAExpressions.select(orders.vehicle.id).from(orders).where(orders.startDate.loe(startDate).and(orders.endDate.goe(endDate))))
+                                openDate.vehicle.id.notIn(JPAExpressions.select(orders.vehicle.id).from(orders).where(orders.startDate.loe(startDate).and(orders.endDate.goe(endDate)).and(orders.status.ne(Status.valueOf("CANCEL")))))
                         ))))))
                 .fetch();
     }
