@@ -30,7 +30,7 @@ public class VehicleCustomRepository {
                 .from(vehicle)
                 .where(vehicle.type.eq(type).and(vehicle.locationX.between((locationX-0.3), (locationX+0.3))).and(vehicle.locationY.between((locationY-0.3), (locationY+0.3)))
                         .and(vehicle.id.in(JPAExpressions.select(openDate.vehicle.id).from(openDate).where(openDate.startDate.loe(startDate).and(openDate.endDate.goe(endDate).and(
-                                openDate.vehicle.id.notIn(JPAExpressions.select(orders.vehicle.id).from(orders).where(orders.startDate.goe(startDate).and(orders.endDate.loe(endDate))))
+                                openDate.vehicle.id.notIn(JPAExpressions.select(orders.vehicle.id).from(orders).where(orders.startDate.loe(startDate).and(orders.endDate.goe(endDate))))
                         ))))))
                 .fetch();
     }
