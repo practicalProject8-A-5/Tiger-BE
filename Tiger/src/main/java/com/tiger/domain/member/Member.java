@@ -17,7 +17,6 @@ import java.util.List;
 @Entity
 public class Member extends Timestamped {
 
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +24,6 @@ public class Member extends Timestamped {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @JsonIgnore
     @Column(nullable = false)
     private String password;
 

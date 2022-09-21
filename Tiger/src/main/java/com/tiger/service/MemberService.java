@@ -140,5 +140,11 @@ public class MemberService {
         return httpServletRequest.getHeader("RefreshToken");
     }
 
+    public Long findIdByEmail(String email) {
+
+        return memberRepository.findIdByEmail(email).orElseThrow(() -> {
+            throw new CustomException(StatusCode.USER_NOT_FOUND);
+        });
+    }
 }
 

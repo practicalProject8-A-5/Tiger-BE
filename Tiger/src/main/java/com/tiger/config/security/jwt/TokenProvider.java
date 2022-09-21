@@ -21,6 +21,9 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.NoSuchElementException;
+
+import static ch.qos.logback.classic.PatternLayout.HEADER_PREFIX;
 
 @Slf4j
 @Component
@@ -35,6 +38,8 @@ public class TokenProvider {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserDetailsService userDetailsService;
 
+    @Value("${jwt.secret}")
+    String secretKey;
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey,
                          RefreshTokenRepository refreshTokenRepository,
@@ -120,5 +125,23 @@ public class TokenProvider {
             return e.getClaims();
         }
     }
+
+//    // 임시로 추가
+//    public  String extract(String header) {
+//        if (header == null || header.equals("") || header.length() < HEADER_PREFIX.length()) {
+//            throw new NoSuchElementException("올바른 JWT 정보가 아닙니다.");
+//        }
+//
+//        return header.substring(
+//                HEADER_PREFIX.length(),
+//                header.length()
+//        );
+//    }
+//
+//    // 임시로 추가
+//    public String getUserPk(String token) {
+//        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("email", String.class);
+//    }
+
 }
 

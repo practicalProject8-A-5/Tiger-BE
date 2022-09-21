@@ -50,7 +50,8 @@ public class MemberController {
 
         return ResponseEntity.ok().headers(headers)
                 .body(CommonResponseDto.success(StatusCode.LOGIN_SUCCESS,
-                        Map.of("email", member.getEmail(),
+                        Map.of("id", member.getId(),
+                                "email", member.getEmail(),
                                 "name", member.getName(),
                                 "tel", member.getTel(),
                                 "profileImage", member.getProfileImage())));
@@ -93,7 +94,8 @@ public class MemberController {
 
         return ResponseEntity.ok().headers(headers)
                 .body(CommonResponseDto.success(StatusCode.TOKEN_REISSUED,
-                        Map.of("email", member.getEmail(),
+                        Map.of("id", member.getId(),
+                                "email", member.getEmail(),
                                 "name", member.getName(),
                                 "tel", member.getTel(),
                                 "profileImage", member.getProfileImage())));
