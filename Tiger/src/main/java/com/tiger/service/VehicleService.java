@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -71,9 +72,13 @@ public class VehicleService {
     }
 
     // 종류별 상품 조회
-    public List<VehicleCommonResponseDto> readAllByType(String type) {
+    public List<VehicleCommonResponseDto> readAllByType(String type, HttpServletRequest request) {
 
-        Member member = checkUtil.validateMember();
+        Member member = null;
+        if (null != request.getHeader("RefreshToken") && null != request.getHeader("Authorization")) {
+            member = checkUtil.validateMember();
+        }
+
         List<Vehicle> vehicleList = vehicleRepository.findAllByTypeAndIsValidOrderByModifiedAtDesc(type, true).orElseThrow(()-> {
             throw new CustomException(StatusCode.VEHICLE_NOT_FOUND);
         });
@@ -82,8 +87,10 @@ public class VehicleService {
 
         for (Vehicle vehicle : vehicleList) {
             VehicleCommonResponseDto vehicleCommonResponseDto = new VehicleCommonResponseDto(vehicle);
-            if(heartRepository.findByMemberAndVehicle(member, vehicle).isPresent()){
-                vehicleCommonResponseDto.setHeart(true);
+            if(member != null){
+                if(heartRepository.findByMemberAndVehicle(member, vehicle).isPresent()){
+                    vehicleCommonResponseDto.setHeart(true);
+                }
             }
             vehicleCommonResponseDtos.add(vehicleCommonResponseDto);
 //                VehicleCommonResponseDto.builder()
@@ -110,15 +117,21 @@ public class VehicleService {
     }
 
     // 상세 상세 조회
-    public VehicleDetailResponseDto readOne(Long vId, LocalDate startDate, LocalDate endDate) {
+    public VehicleDetailResponseDto readOne(Long vId, LocalDate startDate, LocalDate endDate, HttpServletRequest request) {
 
         Vehicle vehicle = findVehicleByVid(vId);
+        Member renter = null;
+        if (null != request.getHeader("RefreshToken") && null != request.getHeader("Authorization")) {
+            renter = checkUtil.validateMember();
+        }
 
-        Member member = findMemberByMid(vehicle.getOwnerId());
+        Member owner = findMemberByMid(vehicle.getOwnerId());
 
-        VehicleDetailResponseDto vehicleDetailResponseDto = new VehicleDetailResponseDto(vehicle, member, startDate, endDate);
-        if(heartRepository.findByMemberAndVehicle(member, vehicle).isPresent()){
-            vehicleDetailResponseDto.setHeart(true);
+        VehicleDetailResponseDto vehicleDetailResponseDto = new VehicleDetailResponseDto(vehicle, owner, startDate, endDate);
+        if(renter != null){
+            if(heartRepository.findByMemberAndVehicle(renter, vehicle).isPresent()){
+                vehicleDetailResponseDto.setHeart(true);
+            }
         }
         return vehicleDetailResponseDto;
     }
@@ -207,14 +220,13 @@ public class VehicleService {
     }
 
     // 상품 검색
-    public List<VehicleSearchResponseDto> search(VehicleSearch vehicleSearch) {
+    public List<VehicleSearchResponseDto> search(VehicleSearch vehicleSearch, HttpServletRequest request) {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member member = null;
-        if(principal != null){
-            UserDetails userDetails = (UserDetails) principal;
-            member = ((UserDetailsImpl) userDetails).getMember();
+        if (null != request.getHeader("RefreshToken") && null != request.getHeader("Authorization")) {
+            member = checkUtil.validateMember();
         }
+
         LocalDate startDate =  vehicleSearch.getStartDate();
         LocalDate endDate = vehicleSearch.getEndDate();
 //        String location = vehicleSearch.getLocation();
@@ -228,8 +240,10 @@ public class VehicleService {
 
         for (VehicleCustomResponseDto vehicleCustomResponseDto : vehicleCustomResponseDtos) {
             VehicleSearchResponseDto vehicleSearchResponseDto = new VehicleSearchResponseDto(vehicleCustomResponseDto, startDate, endDate);
-            if(heartRepository.findByMemberAndVehicleId(member, vehicleSearchResponseDto.getVid()).isPresent()){
-                vehicleSearchResponseDto.setHeart(true);
+            if(member != null){
+                if(heartRepository.findByMemberAndVehicleId(member, vehicleSearchResponseDto.getVid()).isPresent()){
+                    vehicleSearchResponseDto.setHeart(true);
+                }
             }
             vehicleSearchResponseDtos.add(new VehicleSearchResponseDto(vehicleCustomResponseDto, startDate, endDate));
         }
