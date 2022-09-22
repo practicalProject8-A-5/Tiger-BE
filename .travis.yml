@@ -12,6 +12,7 @@ cache:
     - '$HOME/.gradle'
 
 before_install:
+  - cd ./Tiger
   - chmod +x gradlew
 
 
