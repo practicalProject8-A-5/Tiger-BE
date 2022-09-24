@@ -125,23 +125,5 @@ public class TokenProvider {
             return e.getClaims();
         }
     }
-
-//    // 임시로 추가
-//    public  String extract(String header) {
-//        if (header == null || header.equals("") || header.length() < HEADER_PREFIX.length()) {
-//            throw new NoSuchElementException("올바른 JWT 정보가 아닙니다.");
-//        }
-//
-//        return header.substring(
-//                HEADER_PREFIX.length(),
-//                header.length()
-//        );
-//    }
-//
-//    // 임시로 추가
-//    public String getUserPk(String token) {
-//        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("email", String.class);
-//    }
-
 }
 

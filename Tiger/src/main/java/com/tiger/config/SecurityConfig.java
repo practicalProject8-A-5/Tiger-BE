@@ -54,26 +54,31 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/api/vehicle/search").permitAll()
 
 
-//                // 웹소캣 관련
-//                .antMatchers("/api/users/**", "/ws-stomp/**" ).permitAll()
-//                .antMatchers("/ws-stomp/**").permitAll()
-//                .antMatchers("/pub/**").permitAll()
-//                .antMatchers("/sub/**").permitAll()
-//
-//                .antMatchers(HttpMethod.POST,"/chat/**").permitAll()
-//                .antMatchers(HttpMethod.GET,"/chat/**").permitAll()
-//
-//                .antMatchers(HttpMethod.POST,"/room/**").permitAll()
-//                .antMatchers(HttpMethod.GET,"/room/**").permitAll()
-//
-//                .antMatchers(HttpMethod.POST,"/pub/**").permitAll()
-//                .antMatchers(HttpMethod.GET,"/pub/**").permitAll()
-//
-//                .antMatchers(HttpMethod.POST,"/sub/**").permitAll()
-//                .antMatchers(HttpMethod.GET,"/sub/**").permitAll()
-//
-//                .antMatchers(HttpMethod.GET,"/ws-stomp/**").permitAll()
-//                .antMatchers(HttpMethod.POST,"/ws-stomp/**").permitAll()
+                // 웹소캣 관련
+                .antMatchers("/api/users/**", "/ws-stomp/**" ).permitAll()
+                .antMatchers("/ws-stomp/**").permitAll()
+                .antMatchers("/pub/**").permitAll()
+                .antMatchers("/sub/**").permitAll()
+
+                .antMatchers(HttpMethod.POST,"/chat/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/chat/**").permitAll()
+
+                .antMatchers(HttpMethod.POST,"/room/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/room/**").permitAll()
+
+                .antMatchers(HttpMethod.POST,"/pub/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/pub/**").permitAll()
+
+                .antMatchers(HttpMethod.POST,"/sub/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/sub/**").permitAll()
+
+                .antMatchers(HttpMethod.GET,"/ws-stomp/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/ws-stomp/**").permitAll()
+
+
+                .antMatchers("/wss-stomp/**").permitAll() //
+
+                .antMatchers("/ws/**").permitAll() //
 
 
 
