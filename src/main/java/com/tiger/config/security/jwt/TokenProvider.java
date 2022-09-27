@@ -4,7 +4,6 @@ import com.tiger.domain.RefreshToken;
 import com.tiger.domain.TokenDto;
 import com.tiger.domain.UserDetailsImpl;
 import com.tiger.domain.member.Member;
-import com.tiger.exception.CustomException;
 import com.tiger.repository.RefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
