@@ -36,3 +36,4 @@ echo "> $JAR_NAME 실행"
 sudo java -Duser.timezone=Asia/Seoul -jar \
         -Dspring.config.location=classpath:/application.properties,/home/ubuntu/app/deploy/application-hyuk.properties \
         $JAR_NAME 2>&1
+
