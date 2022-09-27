@@ -257,13 +257,14 @@ public class OrderService {
      * 추후 + 알림까지 추가하여 배치로 적용할 예정
      * 매일 24시 0분 1초에 실행
      * */
-    @Scheduled(cron = "5 19 2 * * *")
+    @Scheduled(cron = "5 0 0 * * *")
     @Transactional
     public void changeStatusUse(){
         List<Orders> list = orderRepository.findAllByStartDateEquals(LocalDate.now()).get();
         for(int i=0; i<list.size(); i++){
             Orders order = list.get(i);
             order.setStatus(Status.USE);
+
             log.info("주문상태 USE로 변경 : {} ", order.getId());
         }
     }
