@@ -62,7 +62,36 @@ public class VehicleCustomRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        int count = vehicleCustomResponseDtos.size();
+        Long count =jpaQueryFactory.select(vehicle.count())
+                .from(vehicle)
+                .where(vehicle.type.eq(type)
+                        .and(vehicle.isValid.eq(true)
+                                .and(vehicle.locationX.between((locationX-0.2), (locationX+0.2)).and(vehicle.locationY.between((locationY-0.2), (locationY+0.2)))
+                                        .and(vehicle.id.in(
+                                                        JPAExpressions.select(openDate.vehicle.id)
+                                                                .from(openDate)
+                                                                .where(openDate.startDate.loe(startDate)
+                                                                        .and(openDate.endDate.goe(endDate)
+                                                                                .and(openDate.vehicle.id.notIn(
+                                                                                                JPAExpressions.select(orders.vehicle.id)
+                                                                                                        .from(orders)
+                                                                                                        .where(orders.startDate.between(startDate, endDate)
+                                                                                                                .or(orders.endDate.between(startDate, endDate)
+                                                                                                                        .or(orders.startDate.lt(startDate) // and --> or, loe --> lt
+                                                                                                                                .and(orders.endDate.gt(endDate) // goe --> gt
+                                                                                                                                        .and(orders.status.ne(Status.valueOf("CANCEL")))
+                                                                                                                                )))
+
+                                                                                                        )
+
+                                                                                        )
+                                                                                )))
+
+                                                )
+                                        )))
+
+                )
+                .fetchOne();
 
         return new PageImpl(vehicleCustomResponseDtos, pageable, count);
     }
