@@ -9,6 +9,9 @@ import com.tiger.domain.vehicle.QVehicle;
 import com.tiger.domain.vehicle.dto.QVehicleCustomResponseDto;
 import com.tiger.domain.vehicle.dto.VehicleCustomResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -24,9 +27,9 @@ public class VehicleCustomRepository {
     QOpenDate openDate = QOpenDate.openDate;
 
     //상품 검색
-    public List<VehicleCustomResponseDto> searchVehicle(LocalDate startDate, LocalDate endDate, Double locationX, Double locationY, String type) {
+    public Page<VehicleCustomResponseDto> searchVehicle(LocalDate startDate, LocalDate endDate, Double locationX, Double locationY, String type, Pageable pageable) {
 
-        return jpaQueryFactory.select(new QVehicleCustomResponseDto(vehicle.id, vehicle.ownerId, vehicle.price, vehicle.description, vehicle.location, vehicle.locationX, vehicle.locationY, vehicle.thumbnail, vehicle.vbrand, vehicle.vname, vehicle.type, vehicle.years, vehicle.fuelType, vehicle.passengers, vehicle.transmission, vehicle.fuelEfficiency))
+        List<VehicleCustomResponseDto> vehicleCustomResponseDtos =jpaQueryFactory.select(new QVehicleCustomResponseDto(vehicle.id, vehicle.ownerId, vehicle.price, vehicle.description, vehicle.location, vehicle.locationX, vehicle.locationY, vehicle.thumbnail, vehicle.vbrand, vehicle.vname, vehicle.type, vehicle.years, vehicle.fuelType, vehicle.passengers, vehicle.transmission, vehicle.fuelEfficiency))
                 .from(vehicle)
                 .where(vehicle.type.eq(type)
                         .and(vehicle.isValid.eq(true)
@@ -55,7 +58,13 @@ public class VehicleCustomRepository {
                         )))
 
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        int count = vehicleCustomResponseDtos.size();
+
+        return new PageImpl(vehicleCustomResponseDtos, pageable, count);
     }
 
 
