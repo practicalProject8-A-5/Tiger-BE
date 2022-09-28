@@ -90,9 +90,9 @@ public class VehicleController {
 
         Member member = ((UserDetailsImpl) userDetails).getMember();
 
-        VehicleDetailResponseDto vehicleDetailResponseDto = vehicleService.readOneVehicleForVehicleUpdatePage(vId, member.getId());
+        VehicleUpdatePageResponseDto vehicleUpdatePageResponseDto = vehicleService.readOneVehicleForVehicleUpdatePage(vId, member.getId());
 
-        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleDetailResponseDto);
+        return CommonResponseDto.success(StatusCode.SUCCESS, vehicleUpdatePageResponseDto);
     }
 
     @ApiOperation(value = "차량 수정")

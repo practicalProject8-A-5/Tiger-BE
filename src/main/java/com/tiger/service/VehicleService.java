@@ -137,7 +137,7 @@ public class VehicleService {
     }
 
 
-    public VehicleDetailResponseDto readOneVehicleForVehicleUpdatePage(Long vId, Long ownerId) {
+    public VehicleUpdatePageResponseDto readOneVehicleForVehicleUpdatePage(Long vId, Long ownerId) {
 
         Vehicle vehicle = findVehicleByVehicleId(vId);
 
@@ -147,7 +147,7 @@ public class VehicleService {
 
         Member member = findMemberByMemberId(ownerId);
 
-        return new VehicleDetailResponseDto(vehicle, member, null, null);
+        return new VehicleUpdatePageResponseDto(vehicle, member, null, null);
     }
 
 
