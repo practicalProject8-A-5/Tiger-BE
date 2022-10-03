@@ -17,7 +17,7 @@ public class Controller {
     @GetMapping("/profile")
     public String profile(){
         List<String> profiles = Arrays.asList(env.getActiveProfiles());
-        List<String> realProfiles = Arrays.asList("real1", "real2");
+        List<String> realProfiles = Arrays.asList("port1", "port2");
 
         String defaultProfile = profiles.isEmpty() ? "default" : profiles.get(0);
 
@@ -25,5 +25,11 @@ public class Controller {
                 .filter(realProfiles::contains)
                 .findAny()
                 .orElse(defaultProfile);
+    }
+
+    @GetMapping("/health")
+    public String healthCheck(){
+
+        return "good";
     }
 }
